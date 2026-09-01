@@ -66,10 +66,11 @@ export default function CameraController({
       // Required constraint: maxPolarAngle strictly <= Math.PI / 2.1
       maxPolarAngle={Math.PI / 2.1}
       minPolarAngle={0.05}
-      minDistance={6}
-      maxDistance={250}
+      minDistance={1.0}
+      maxDistance={300}
       autoRotate={autoRotate}
       autoRotateSpeed={0.7}
+      zoomSpeed={1.2}
       onStart={() => {
         isTransitioningRef.current = false;
       }}
