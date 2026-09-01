@@ -197,7 +197,7 @@ export default function UrbanModel({
             }
 
             mat.side = THREE.DoubleSide;
-            mat.shadowSide = THREE.FrontSide;
+            mat.shadowSide = isBuilding ? THREE.BackSide : THREE.FrontSide;
             mat.depthWrite = true;
             mat.depthTest = true;
 
