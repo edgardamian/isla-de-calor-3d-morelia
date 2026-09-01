@@ -25,7 +25,7 @@ export default function SceneCanvas({
   return (
     <div className="absolute inset-0 w-full h-full bg-slate-950 overflow-hidden">
       <Canvas
-        shadows={enableShadows}
+        shadows={enableShadows ? { type: THREE.PCFShadowMap } : false}
         camera={{
           position: [42, 36, 42],
           fov: 45,
