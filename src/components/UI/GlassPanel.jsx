@@ -133,9 +133,9 @@ export default function GlassPanel({
             <div className="flex items-center justify-between text-[11px] font-semibold text-slate-300 border-b border-white/5 pb-1.5">
               <span className="flex items-center gap-1.5 text-cyan-400">
                 <Satellite className="w-3.5 h-3.5" />
-                Metadatos Satelitales (Landsat)
+                Metadatos de Captura Satelital
               </span>
-              <span className="text-emerald-400 font-mono">QGIS h5/jet</span>
+              <span className="text-emerald-400 font-mono">Sensor TIRS</span>
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
@@ -167,25 +167,6 @@ export default function GlassPanel({
                 <span className="text-amber-300 font-bold mt-0.5">145.28 °</span>
               </div>
             </div>
-          </div>
-
-          {/* Primary Action Button: Restablecer Vista */}
-          <div>
-            <button
-              onClick={onResetView}
-              id="btn-reset-view"
-              className="w-full group relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 p-[1.5px] shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 hover:scale-[1.02] active:scale-[0.99]"
-            >
-              <div className="flex items-center justify-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-950/80 backdrop-blur-md group-hover:bg-slate-950/60 transition-all">
-                <RotateCcw className="w-4 h-4 text-orange-400 group-hover:-rotate-90 transition-transform duration-500" />
-                <span className="font-semibold text-sm tracking-wide text-white group-hover:text-orange-200 transition-colors">
-                  Restablecer Vista Isométrica
-                </span>
-                <span className="ml-auto text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">
-                  Default
-                </span>
-              </div>
-            </button>
           </div>
 
           {/* ======================================================== */}

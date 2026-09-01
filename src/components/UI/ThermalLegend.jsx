@@ -76,7 +76,7 @@ export default function ThermalLegend() {
               </span>
             </div>
             <div className="text-[9px] text-slate-400 pt-1 border-t border-white/5 flex items-center justify-between font-mono">
-              <span>Paleta QGIS: h5/jet</span>
+              <span>Resolución Espacial: 30m</span>
               <span className="text-cyan-400">16 Rangos Térmicos</span>
             </div>
           </div>
