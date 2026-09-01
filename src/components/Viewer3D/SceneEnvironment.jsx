@@ -28,74 +28,74 @@ export default function SceneEnvironment({
     const fillZ = -z * 0.7;
 
     // Atmospheric color interpolation based on solar elevation
-    // MODO ANÁLISIS SOLAR CAD: Sombras ultra-sólidas, oscuras y afiladas para identificar cañones urbanos y calles sin sol
+    // SOMBRAS VECTORIALES CONTINUAS: shadowRadius (1.3) con PCFSoftShadowMap proyecta líneas rectas continuas sin escalones de píxel ("serruchos")
     let dirColor = '#fffbeb';
-    let dirIntensity = 3.6;
-    let ambientIntensity = 0.09; // Sombra muy oscura y sólida (gran contraste con las calles soleadas)
+    let dirIntensity = 3.5;
+    let ambientIntensity = 0.12; // Sombra sólida y oscura para análisis de calles sin sol
     let fillColor = '#93c5fd';
-    let fillIntensity = 0.0;    // Cero relleno que lave la sombra en las calles
+    let fillIntensity = 0.03;
     let skyColor = '#030712';
     let shadowBias = -0.00001;
-    let shadowNormalBias = 0.00005;
-    let shadowRadius = 0;       // Silueta 100% vectorial, recta y nítida
+    let shadowNormalBias = 0.0001;
+    let shadowRadius = 1.3;      // Suavizado sub-píxel: convierte los serruchos en líneas rectas continuas del edificio
 
     if (t < 8.0) {
       // Early morning / Dawn (06:00 - 08:00)
       const morningAlpha = (t - 6.0) / 2.0;
       dirColor = '#ffedd5';
-      dirIntensity = 3.2 + morningAlpha * 0.4;
-      ambientIntensity = 0.08 + morningAlpha * 0.02;
+      dirIntensity = 3.1 + morningAlpha * 0.4;
+      ambientIntensity = 0.10 + morningAlpha * 0.03;
       fillColor = '#7dd3fc';
-      fillIntensity = 0.0;
+      fillIntensity = 0.03;
       skyColor = '#0a0f1d';
       shadowBias = -0.000012;
-      shadowNormalBias = 0.00006;
-      shadowRadius = 0;
+      shadowNormalBias = 0.0001;
+      shadowRadius = 1.3;
     } else if (t >= 8.0 && t <= 12.0) {
       // Landsat Morning Pass (08:00 - 12:00)
       dirColor = '#fffbeb';
-      dirIntensity = 3.65;
-      ambientIntensity = 0.09;
+      dirIntensity = 3.55;
+      ambientIntensity = 0.12;
       fillColor = '#93c5fd';
-      fillIntensity = 0.0;
+      fillIntensity = 0.03;
       skyColor = '#030712';
       shadowBias = -0.00001;
-      shadowNormalBias = 0.00005;
-      shadowRadius = 0;
+      shadowNormalBias = 0.0001;
+      shadowRadius = 1.3;
     } else if (t > 12.0 && t < 15.0) {
       // Solar Noon / Zenith (12:00 - 15:00)
       dirColor = '#ffffff';
-      dirIntensity = 3.7;
-      ambientIntensity = 0.12;
+      dirIntensity = 3.6;
+      ambientIntensity = 0.15;
       fillColor = '#cbd5e1';
-      fillIntensity = 0.0;
+      fillIntensity = 0.03;
       skyColor = '#020617';
       shadowBias = -0.00001;
-      shadowNormalBias = 0.00004;
-      shadowRadius = 0;
+      shadowNormalBias = 0.00008;
+      shadowRadius = 1.3;
     } else if (t >= 15.0 && t <= 18.0) {
       // Late Afternoon (15:00 - 18:00)
       dirColor = '#fed7aa';
-      dirIntensity = 3.6;
-      ambientIntensity = 0.09;
+      dirIntensity = 3.5;
+      ambientIntensity = 0.11;
       fillColor = '#a855f7';
-      fillIntensity = 0.0;
+      fillIntensity = 0.04;
       skyColor = '#070b16';
       shadowBias = -0.00001;
-      shadowNormalBias = 0.00005;
-      shadowRadius = 0;
+      shadowNormalBias = 0.0001;
+      shadowRadius = 1.3;
     } else {
       // Sunset & Twilight (18:00 - 20:00)
       const sunsetAlpha = (t - 18.0) / 2.0;
       dirColor = '#fdba74';
-      dirIntensity = 3.6 - sunsetAlpha * 0.5;
-      ambientIntensity = 0.07 - sunsetAlpha * 0.02;
+      dirIntensity = 3.5 - sunsetAlpha * 0.5;
+      ambientIntensity = 0.09 - sunsetAlpha * 0.02;
       fillColor = '#c084fc';
-      fillIntensity = 0.0;
+      fillIntensity = 0.04;
       skyColor = '#0c0a1f';
       shadowBias = -0.000012;
-      shadowNormalBias = 0.00006;
-      shadowRadius = 0;
+      shadowNormalBias = 0.0001;
+      shadowRadius = 1.3;
     }
 
     return {
@@ -123,7 +123,7 @@ export default function SceneEnvironment({
       {/* Target object at city center */}
       <primitive object={targetObjectRef.current} position={[0, 0, 0]} />
 
-      {/* Primary Directional Light (Sol CAD de alto contraste y resolución 4096px) */}
+      {/* Primary Directional Light (Sol enfocado y anclado a la base con líneas rectas continuas) */}
       <directionalLight
         position={solarState.dirPosition}
         target={targetObjectRef.current}
@@ -154,7 +154,7 @@ export default function SceneEnvironment({
       <hemisphereLight
         skyColor={solarState.fillColor}
         groundColor="#0f172a"
-        intensity={0.04}
+        intensity={0.06}
       />
     </>
   );
