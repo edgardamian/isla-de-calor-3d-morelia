@@ -51,12 +51,15 @@ export default function UrbanModel({
 
       if (child.isMesh) {
         meshCount++;
-        child.castShadow = true;
-        child.receiveShadow = true;
 
         if (isBuilding) {
+          child.castShadow = true;
+          child.receiveShadow = true;
           foundMeshRefs.buildings.push(child);
         } else {
+          // Terrain (MDE) only RECEIVES building shadows (castShadow=false prevents shadow acne stripes on ground)
+          child.castShadow = false;
+          child.receiveShadow = true;
           foundMeshRefs.mde.push(child);
         }
 
