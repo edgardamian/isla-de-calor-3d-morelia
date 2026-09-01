@@ -28,16 +28,17 @@ export default function SceneEnvironment({
     const fillZ = -z * 0.7;
 
     // Atmospheric color interpolation based on solar elevation
-    // Calibrated normalBias (0.0003) anchors shadows directly to the building base with ZERO gap/detachment
+    // Tuned normalBias (0.0035) + shadowRadius (1.0) completely eliminates 'serrucho' (sawteeth/acne) on walls & roofs
+    // while keeping shadows solidly anchored to building footprints!
     let dirColor = '#fffbeb';
     let dirIntensity = 3.2;
     let ambientIntensity = 0.22;
     let fillColor = '#93c5fd';
     let fillIntensity = 0.08;
     let skyColor = '#030712';
-    let shadowBias = -0.000015;
-    let shadowNormalBias = 0.0003;
-    let shadowRadius = 0; // Solid, straight-edge architectural shadow
+    let shadowBias = -0.00005;
+    let shadowNormalBias = 0.0035;
+    let shadowRadius = 1.0;
 
     if (t < 8.0) {
       // Early morning / Dawn (06:00 - 08:00)
@@ -48,9 +49,9 @@ export default function SceneEnvironment({
       fillColor = '#7dd3fc';
       fillIntensity = 0.08;
       skyColor = '#0a0f1d';
-      shadowBias = -0.00002;
-      shadowNormalBias = 0.00035;
-      shadowRadius = 0;
+      shadowBias = -0.00006;
+      shadowNormalBias = 0.004;
+      shadowRadius = 1.0;
     } else if (t >= 8.0 && t <= 12.0) {
       // Landsat Morning Pass (08:00 - 12:00)
       dirColor = '#fffbeb';
@@ -59,9 +60,9 @@ export default function SceneEnvironment({
       fillColor = '#93c5fd';
       fillIntensity = 0.08;
       skyColor = '#030712';
-      shadowBias = -0.000015;
-      shadowNormalBias = 0.0003;
-      shadowRadius = 0;
+      shadowBias = -0.00005;
+      shadowNormalBias = 0.0035;
+      shadowRadius = 1.0;
     } else if (t > 12.0 && t < 15.0) {
       // Solar Noon / Zenith (12:00 - 15:00)
       dirColor = '#ffffff';
@@ -70,9 +71,9 @@ export default function SceneEnvironment({
       fillColor = '#cbd5e1';
       fillIntensity = 0.06;
       skyColor = '#020617';
-      shadowBias = -0.000015;
-      shadowNormalBias = 0.00025;
-      shadowRadius = 0;
+      shadowBias = -0.00004;
+      shadowNormalBias = 0.003;
+      shadowRadius = 1.0;
     } else if (t >= 15.0 && t <= 18.0) {
       // Late Afternoon (15:00 - 18:00)
       dirColor = '#fed7aa';
@@ -81,9 +82,9 @@ export default function SceneEnvironment({
       fillColor = '#a855f7';
       fillIntensity = 0.1;
       skyColor = '#070b16';
-      shadowBias = -0.00002;
-      shadowNormalBias = 0.0003;
-      shadowRadius = 0;
+      shadowBias = -0.00005;
+      shadowNormalBias = 0.0035;
+      shadowRadius = 1.0;
     } else {
       // Sunset & Twilight (18:00 - 20:00)
       const sunsetAlpha = (t - 18.0) / 2.0;
@@ -93,9 +94,9 @@ export default function SceneEnvironment({
       fillColor = '#c084fc';
       fillIntensity = 0.1;
       skyColor = '#0c0a1f';
-      shadowBias = -0.00002;
-      shadowNormalBias = 0.00035;
-      shadowRadius = 0;
+      shadowBias = -0.00006;
+      shadowNormalBias = 0.004;
+      shadowRadius = 1.0;
     }
 
     return {
