@@ -80,6 +80,7 @@ export default function UrbanModel({
           if (isBuilding && pos && !geom.attributes.extrusionHeight) {
             const count = pos.count;
             const deltaH = new Float32Array(count);
+            const isWallTop = new Uint8Array(count);
             const indices = geom.index ? geom.index.array : null;
             const triCount = indices ? indices.length / 3 : count / 3;
 
@@ -97,32 +98,93 @@ export default function UrbanModel({
               const maxY = Math.max(y0, y1, y2);
               const h = maxY - minY;
 
-              // Vertical wall triangle (height between 0.3m and 120m)
-              if (h > 0.3 && h < 120) {
+              // Vertical wall triangle (height between 0.3m and 150m)
+              if (h > 0.3 && h < 150) {
                 const midY = minY + h * 0.5;
-                if (y0 > midY) deltaH[i0] = Math.max(deltaH[i0], h);
-                if (y1 > midY) deltaH[i1] = Math.max(deltaH[i1], h);
-                if (y2 > midY) deltaH[i2] = Math.max(deltaH[i2], h);
+                if (y0 > midY) { deltaH[i0] = Math.max(deltaH[i0], h); isWallTop[i0] = 1; }
+                if (y1 > midY) { deltaH[i1] = Math.max(deltaH[i1], h); isWallTop[i1] = 1; }
+                if (y2 > midY) { deltaH[i2] = Math.max(deltaH[i2], h); isWallTop[i2] = 1; }
               }
             }
 
-            // Pass 2: Roof triangles. Only propagate to faces where ALL THREE vertices point UP (normal.y > 0.4)
-            if (norm) {
+            // Pass 2: Spatial grid mapping for wall tops in XZ plane
+            // Connects split roof vertices (flat normal up) with their adjacent wall tops
+            const CELL_SIZE = 15.0;
+            const grid = new Map();
+
+            for (let i = 0; i < count; i++) {
+              if (isWallTop[i] === 1 && deltaH[i] > 0) {
+                const x = pos.getX(i);
+                const z = pos.getZ(i);
+                const cx = Math.floor(x / CELL_SIZE);
+                const cz = Math.floor(z / CELL_SIZE);
+                const key = `${cx},${cz}`;
+                if (!grid.has(key)) grid.set(key, []);
+                grid.get(key).push(i);
+              }
+            }
+
+            // Pass 3: Transfer height to roof vertices (ny > 0.25)
+            for (let i = 0; i < count; i++) {
+              if (deltaH[i] > 0) continue;
+
+              const ny = norm ? norm.getY(i) : 1;
+              if (ny > 0.25) {
+                const x = pos.getX(i);
+                const y = pos.getY(i);
+                const z = pos.getZ(i);
+                const cx = Math.floor(x / CELL_SIZE);
+                const cz = Math.floor(z / CELL_SIZE);
+
+                let bestH = 0;
+                let minDistSq = Infinity;
+
+                for (let dx = -3; dx <= 3; dx++) {
+                  for (let dz = -3; dz <= 3; dz++) {
+                    const key = `${cx + dx},${cz + dz}`;
+                    const cell = grid.get(key);
+                    if (!cell) continue;
+
+                    for (let k = 0; k < cell.length; k++) {
+                      const wIdx = cell[k];
+                      const wy = pos.getY(wIdx);
+                      // Match wall top vertex with similar elevation (+- 3.0m)
+                      if (Math.abs(y - wy) < 3.0) {
+                        const wx = pos.getX(wIdx);
+                        const wz = pos.getZ(wIdx);
+                        const dSq = (x - wx) * (x - wx) + (z - wz) * (z - wz);
+                        if (dSq < minDistSq) {
+                          minDistSq = dSq;
+                          bestH = deltaH[wIdx];
+                        }
+                      }
+                    }
+                  }
+                }
+
+                if (bestH > 0) {
+                  deltaH[i] = bestH;
+                }
+              }
+            }
+
+            // Pass 4: Multi-pass triangle propagation for interior roof faces
+            for (let pass = 0; pass < 3; pass++) {
               for (let t = 0; t < triCount; t++) {
                 const i0 = indices ? indices[t * 3] : t * 3;
                 const i1 = indices ? indices[t * 3 + 1] : t * 3 + 1;
                 const i2 = indices ? indices[t * 3 + 2] : t * 3 + 2;
 
-                const ny0 = norm.getY(i0);
-                const ny1 = norm.getY(i1);
-                const ny2 = norm.getY(i2);
+                const ny0 = norm ? norm.getY(i0) : 1;
+                const ny1 = norm ? norm.getY(i1) : 1;
+                const ny2 = norm ? norm.getY(i2) : 1;
 
-                if (ny0 > 0.4 && ny1 > 0.4 && ny2 > 0.4) {
-                  const roofH = Math.max(deltaH[i0], deltaH[i1], deltaH[i2]);
-                  if (roofH > 0) {
-                    deltaH[i0] = roofH;
-                    deltaH[i1] = roofH;
-                    deltaH[i2] = roofH;
+                if (ny0 > 0.25 && ny1 > 0.25 && ny2 > 0.25) {
+                  const maxH = Math.max(deltaH[i0], deltaH[i1], deltaH[i2]);
+                  if (maxH > 0) {
+                    if (deltaH[i0] === 0) deltaH[i0] = maxH;
+                    if (deltaH[i1] === 0) deltaH[i1] = maxH;
+                    if (deltaH[i2] === 0) deltaH[i2] = maxH;
                   }
                 }
               }
