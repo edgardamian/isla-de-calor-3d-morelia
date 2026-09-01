@@ -1,10 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 export default function SceneEnvironment({
   sunTime = 11.1, // Decimal hours (e.g. 11.1 = 11:06 AM)
   enableShadows = true,
 }) {
+  const targetObjectRef = useRef(new THREE.Object3D());
+
   // Continuous solar trajectory & atmospheric calculation:
   // Evaluates realistic sun arc across Morelia (19.7°N) from 06:00 (Sunrise) to 20:00 (Sunset/Twilight)
   const solarState = useMemo(() => {
@@ -16,8 +18,8 @@ export default function SceneEnvironment({
     const sinArc = Math.sin(progress * Math.PI);
     const cosArc = Math.cos(progress * Math.PI);
 
-    const x = cosArc * -52.0; // East to West trajectory
-    const y = Math.max(6.0, sinArc * 62.0 + 4.0); // Sun elevation
+    const x = cosArc * -48.0; // East to West trajectory
+    const y = Math.max(9.0, sinArc * 58.0 + 6.0); // Sun elevation (keeps sun above horizon to prevent detached shadows)
     const z = sinArc * 20.0 + 16.0; // Southern sky bias for Northern Hemisphere
 
     // Fill light from opposite direction for atmospheric bounce
@@ -26,16 +28,16 @@ export default function SceneEnvironment({
     const fillZ = -z * 0.7;
 
     // Atmospheric color interpolation based on solar elevation
-    // High contrast for solid, razor-sharp architectural building shadows
+    // Calibrated normalBias (0.0003) anchors shadows directly to the building base with ZERO gap/detachment
     let dirColor = '#fffbeb';
     let dirIntensity = 3.2;
     let ambientIntensity = 0.22;
     let fillColor = '#93c5fd';
     let fillIntensity = 0.08;
     let skyColor = '#030712';
-    let shadowBias = -0.00008;
-    let shadowNormalBias = 0.02;
-    let shadowRadius = 0; // Solid, straight-edge shadow silhouette (no blur)
+    let shadowBias = -0.000015;
+    let shadowNormalBias = 0.0003;
+    let shadowRadius = 0; // Solid, straight-edge architectural shadow
 
     if (t < 8.0) {
       // Early morning / Dawn (06:00 - 08:00)
@@ -46,8 +48,8 @@ export default function SceneEnvironment({
       fillColor = '#7dd3fc';
       fillIntensity = 0.08;
       skyColor = '#0a0f1d';
-      shadowBias = -0.0001;
-      shadowNormalBias = 0.025;
+      shadowBias = -0.00002;
+      shadowNormalBias = 0.00035;
       shadowRadius = 0;
     } else if (t >= 8.0 && t <= 12.0) {
       // Landsat Morning Pass (08:00 - 12:00)
@@ -57,8 +59,8 @@ export default function SceneEnvironment({
       fillColor = '#93c5fd';
       fillIntensity = 0.08;
       skyColor = '#030712';
-      shadowBias = -0.00008;
-      shadowNormalBias = 0.02;
+      shadowBias = -0.000015;
+      shadowNormalBias = 0.0003;
       shadowRadius = 0;
     } else if (t > 12.0 && t < 15.0) {
       // Solar Noon / Zenith (12:00 - 15:00)
@@ -68,8 +70,8 @@ export default function SceneEnvironment({
       fillColor = '#cbd5e1';
       fillIntensity = 0.06;
       skyColor = '#020617';
-      shadowBias = -0.00008;
-      shadowNormalBias = 0.018;
+      shadowBias = -0.000015;
+      shadowNormalBias = 0.00025;
       shadowRadius = 0;
     } else if (t >= 15.0 && t <= 18.0) {
       // Late Afternoon (15:00 - 18:00)
@@ -79,8 +81,8 @@ export default function SceneEnvironment({
       fillColor = '#a855f7';
       fillIntensity = 0.1;
       skyColor = '#070b16';
-      shadowBias = -0.0001;
-      shadowNormalBias = 0.022;
+      shadowBias = -0.00002;
+      shadowNormalBias = 0.0003;
       shadowRadius = 0;
     } else {
       // Sunset & Twilight (18:00 - 20:00)
@@ -91,8 +93,8 @@ export default function SceneEnvironment({
       fillColor = '#c084fc';
       fillIntensity = 0.1;
       skyColor = '#0c0a1f';
-      shadowBias = -0.00012;
-      shadowNormalBias = 0.025;
+      shadowBias = -0.00002;
+      shadowNormalBias = 0.00035;
       shadowRadius = 0;
     }
 
@@ -118,9 +120,13 @@ export default function SceneEnvironment({
 
       <ambientLight intensity={solarState.ambientIntensity} />
 
-      {/* Primary Directional Light (Sol enfocado con máxima nitidez y silueta geométrica recta) */}
+      {/* Target object at city center */}
+      <primitive object={targetObjectRef.current} position={[0, 0, 0]} />
+
+      {/* Primary Directional Light (Sol enfocado y anclado a la base de los edificios sin desprendimiento) */}
       <directionalLight
         position={solarState.dirPosition}
+        target={targetObjectRef.current}
         intensity={solarState.dirIntensity}
         color={solarState.dirColor}
         castShadow={enableShadows}

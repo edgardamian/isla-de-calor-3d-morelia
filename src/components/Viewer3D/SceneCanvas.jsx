@@ -46,7 +46,7 @@ export default function SceneCanvas({
           lightingPreset={lightingPreset}
           enableShadows={enableShadows}
         />
-        
+
         <CameraController
           activePreset={activePreset}
           resetTrigger={resetTrigger}
