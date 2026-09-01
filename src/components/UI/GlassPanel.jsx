@@ -18,8 +18,21 @@ import {
   Sparkles,
   Palette,
   Clock,
+  Play,
+  Pause,
   CloudSun,
 } from 'lucide-react';
+
+function formatSolarTime(decimalHours) {
+  const totalMinutes = Math.round(decimalHours * 60);
+  const hours24 = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  const period = hours24 >= 12 ? 'PM' : 'AM';
+  const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
+  const padHours = String(hours12).padStart(2, '0');
+  const padMinutes = String(minutes).padStart(2, '0');
+  return `${padHours}:${padMinutes} ${period}`;
+}
 
 export default function GlassPanel({
   onResetView,
@@ -43,6 +56,12 @@ export default function GlassPanel({
   onChangeBuildingTextureMode,
   lightingPreset,
   onSelectLighting,
+  sunTime = 11.1,
+  onChangeSunTime,
+  isPlayingShadows = false,
+  onTogglePlayShadows,
+  shadowSpeed = 1,
+  onChangeShadowSpeed,
   enableShadows = true,
   onToggleShadows,
   modelStats,
@@ -478,27 +497,91 @@ export default function GlassPanel({
             </div>
           </div>
 
-            {/* Lighting Modes and Solar Simulation */}
-            <div className="space-y-2 pt-1 border-t border-white/10">
+            {/* ======================================================== */}
+            {/* SIMULACIÓN SOLAR Y ANIMACIÓN DE SOMBRAS 3D                */}
+            {/* ======================================================== */}
+            <div className="space-y-2.5 pt-1.5 border-t border-white/10">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
                   <Sun className="w-3.5 h-3.5 text-amber-400" />
-                  Simulación Solar e Iluminación
+                  Simulador Solar & Sombras
                 </span>
-                <span className="text-[9px] font-mono text-slate-400 bg-slate-800/80 px-1.5 py-0.5 rounded border border-white/5">
-                  {lightingPreset === 'sunrise' && '07:30 • Oriente'}
-                  {lightingPreset === 'landsatReal' && '11:06 • Landsat'}
-                  {lightingPreset === 'zenith' && '13:00 • 90° Cenit'}
-                  {lightingPreset === 'sunset' && '18:45 • Poniente'}
+                <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/15 px-2 py-0.5 rounded-lg border border-amber-500/30 flex items-center gap-1 shadow-sm">
+                  <Clock className="w-3 h-3 text-amber-400" />
+                  {formatSolarTime(sunTime)}
                 </span>
               </div>
 
+              {/* Time Slider (06:00 AM to 08:00 PM in 1-minute steps) */}
+              <div className="space-y-1.5 bg-slate-950/70 p-3 rounded-2xl border border-white/10 shadow-inner">
+                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                  <span>06:00 AM (Amanecer)</span>
+                  <span>08:00 PM (Ocaso)</span>
+                </div>
+
+                <div className="relative flex items-center py-1">
+                  <input
+                    type="range"
+                    min="6.0"
+                    max="20.0"
+                    step="0.016666"
+                    value={sunTime}
+                    onChange={(e) => onChangeSunTime(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 hover:accent-amber-400 focus:outline-none"
+                    title="Desliza para cambiar la hora y los minutos"
+                  />
+                </div>
+
+                {/* Solar Animation Controls: Play/Pause and Speed */}
+                <div className="flex items-center justify-between pt-1 border-t border-white/5">
+                  <button
+                    onClick={onTogglePlayShadows}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all shadow-md ${
+                      isPlayingShadows
+                        ? 'bg-amber-500 text-slate-950 shadow-amber-500/30'
+                        : 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-200 hover:bg-amber-500/30'
+                    }`}
+                  >
+                    {isPlayingShadows ? (
+                      <>
+                        <Pause className="w-3 h-3 fill-current" />
+                        <span>Pausar</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-3 h-3 fill-current" />
+                        <span>Animar Sombras</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Speed Selector */}
+                  <div className="flex items-center gap-1">
+                    <span className="text-[9px] text-slate-400 font-mono pr-0.5">Vel:</span>
+                    {[1, 2, 4].map((spd) => (
+                      <button
+                        key={spd}
+                        onClick={() => onChangeShadowSpeed(spd)}
+                        className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold transition-all ${
+                          shadowSpeed === spd
+                            ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50'
+                            : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                        }`}
+                      >
+                        {spd}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Solar Preset Buttons */}
               <div className="grid grid-cols-2 gap-1.5">
                 {[
                   { id: 'sunrise', label: 'Amanecer', time: '07:30 AM', icon: Sunrise, color: 'text-amber-300' },
                   { id: 'landsatReal', label: 'Paso Satélite', time: '11:06 AM', icon: Satellite, color: 'text-cyan-400' },
-                  { id: 'zenith', label: 'Cenital', time: '13:00 PM', icon: Sun, color: 'text-yellow-300' },
-                  { id: 'sunset', label: 'Atardecer', time: '18:45 PM', icon: Sunset, color: 'text-orange-400' },
+                  { id: 'zenith', label: 'Cenital', time: '01:00 PM', icon: Sun, color: 'text-yellow-300' },
+                  { id: 'sunset', label: 'Atardecer', time: '06:45 PM', icon: Sunset, color: 'text-orange-400' },
                 ].map((l) => {
                   const Icon = l.icon;
                   const isSelected = lightingPreset === l.id;
@@ -506,7 +589,7 @@ export default function GlassPanel({
                     <button
                       key={l.id}
                       onClick={() => onSelectLighting(l.id)}
-                      className={`py-2 px-2.5 rounded-xl text-left transition-all border flex flex-col gap-0.5 ${
+                      className={`py-1.5 px-2 rounded-xl text-left transition-all border flex flex-col gap-0.5 ${
                         isSelected
                           ? 'bg-gradient-to-r from-amber-500/25 to-orange-500/20 border-amber-500/50 text-white shadow-md shadow-amber-500/10'
                           : 'bg-slate-900/60 hover:bg-slate-800 text-slate-400 border-white/5'
@@ -526,30 +609,28 @@ export default function GlassPanel({
               </div>
 
               {/* Dynamic 3D Shadows System Toggle */}
-              <div className="pt-1">
-                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-950/70 border border-white/10">
-                  <div className="flex items-center gap-2">
-                    <div className={`p-1.5 rounded-lg ${enableShadows ? 'bg-amber-500/20 text-amber-300' : 'bg-slate-800 text-slate-500'}`}>
-                      <Sun className="w-3.5 h-3.5" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-semibold text-slate-200">Sistema de Sombras 3D</p>
-                      <p className="text-[9px] text-slate-400">Oclusión y relieve de edificios</p>
-                    </div>
+              <div className="flex items-center justify-between p-2 rounded-xl bg-slate-950/70 border border-white/10">
+                <div className="flex items-center gap-2">
+                  <div className={`p-1.5 rounded-lg ${enableShadows ? 'bg-amber-500/20 text-amber-300' : 'bg-slate-800 text-slate-500'}`}>
+                    <Sun className="w-3.5 h-3.5" />
                   </div>
-
-                  <button
-                    onClick={onToggleShadows}
-                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 ${
-                      enableShadows
-                        ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50 shadow-sm'
-                        : 'bg-slate-800 text-slate-500 hover:text-slate-300 border border-white/5'
-                    }`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full ${enableShadows ? 'bg-amber-400 animate-pulse' : 'bg-slate-500'}`} />
-                    <span>{enableShadows ? 'ON' : 'OFF'}</span>
-                  </button>
+                  <div>
+                    <p className="text-[11px] font-semibold text-slate-200">Sistema de Sombras 3D</p>
+                    <p className="text-[9px] text-slate-400">Oclusión y relieve de edificios</p>
+                  </div>
                 </div>
+
+                <button
+                  onClick={onToggleShadows}
+                  className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 ${
+                    enableShadows
+                      ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50 shadow-sm'
+                      : 'bg-slate-800 text-slate-500 hover:text-slate-300 border border-white/5'
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${enableShadows ? 'bg-amber-400 animate-pulse' : 'bg-slate-500'}`} />
+                  <span>{enableShadows ? 'ON' : 'OFF'}</span>
+                </button>
               </div>
             </div>
 

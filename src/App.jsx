@@ -22,8 +22,36 @@ export default function App() {
   const [buildingTextureMode, setBuildingTextureMode] = useState('thermal'); // 'thermal' | 'architectural'
   
   const [lightingPreset, setLightingPreset] = useState('landsatReal');
+  const [sunTime, setSunTime] = useState(11.1); // 11:06 AM (Landsat)
+  const [isPlayingShadows, setIsPlayingShadows] = useState(false);
+  const [shadowSpeed, setShadowSpeed] = useState(1); // 1x, 2x, 4x
   const [enableShadows, setEnableShadows] = useState(true);
   const [modelStats, setModelStats] = useState(null);
+
+  // Smooth real-time shadow & solar animation loop
+  React.useEffect(() => {
+    if (!isPlayingShadows) return;
+    let animationFrameId;
+    let lastTime = performance.now();
+
+    const loop = (currentTime) => {
+      const deltaSec = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+
+      setSunTime((prev) => {
+        // ~1.2 hours of sun simulation per second at 1x speed
+        const step = 1.2 * shadowSpeed * deltaSec;
+        let next = prev + step;
+        if (next > 19.8) next = 6.2; // Loop from sunrise to sunset
+        return next;
+      });
+
+      animationFrameId = requestAnimationFrame(loop);
+    };
+
+    animationFrameId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isPlayingShadows, shadowSpeed]);
 
   const handleResetView = useCallback(() => {
     setActivePreset('isometric');
@@ -68,6 +96,27 @@ export default function App() {
 
   const handleSelectLighting = useCallback((presetId) => {
     setLightingPreset(presetId);
+    if (presetId === 'sunrise') setSunTime(7.5);
+    else if (presetId === 'landsatReal') setSunTime(11.1);
+    else if (presetId === 'zenith') setSunTime(13.0);
+    else if (presetId === 'sunset') setSunTime(18.75);
+  }, []);
+
+  const handleChangeSunTime = useCallback((newTime) => {
+    setSunTime(newTime);
+    // Sync closest preset name
+    if (newTime <= 8.5) setLightingPreset('sunrise');
+    else if (newTime > 8.5 && newTime <= 12.0) setLightingPreset('landsatReal');
+    else if (newTime > 12.0 && newTime <= 15.0) setLightingPreset('zenith');
+    else setLightingPreset('sunset');
+  }, []);
+
+  const handleTogglePlayShadows = useCallback(() => {
+    setIsPlayingShadows((prev) => !prev);
+  }, []);
+
+  const handleChangeShadowSpeed = useCallback((speed) => {
+    setShadowSpeed(speed);
   }, []);
 
   const handleToggleShadows = useCallback(() => {
@@ -94,6 +143,7 @@ export default function App() {
         mdeTextureMode={mdeTextureMode}
         buildingTextureMode={buildingTextureMode}
         lightingPreset={lightingPreset}
+        sunTime={sunTime}
         enableShadows={enableShadows}
         onModelLoaded={handleModelLoaded}
       />
@@ -127,6 +177,12 @@ export default function App() {
           onChangeBuildingTextureMode={handleChangeBuildingTextureMode}
           lightingPreset={lightingPreset}
           onSelectLighting={handleSelectLighting}
+          sunTime={sunTime}
+          onChangeSunTime={handleChangeSunTime}
+          isPlayingShadows={isPlayingShadows}
+          onTogglePlayShadows={handleTogglePlayShadows}
+          shadowSpeed={shadowSpeed}
+          onChangeShadowSpeed={handleChangeShadowSpeed}
           enableShadows={enableShadows}
           onToggleShadows={handleToggleShadows}
           modelStats={modelStats}
