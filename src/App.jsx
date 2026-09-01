@@ -22,6 +22,7 @@ export default function App() {
   const [buildingTextureMode, setBuildingTextureMode] = useState('thermal'); // 'thermal' | 'architectural'
   
   const [lightingPreset, setLightingPreset] = useState('landsatReal');
+  const [enableShadows, setEnableShadows] = useState(true);
   const [modelStats, setModelStats] = useState(null);
 
   const handleResetView = useCallback(() => {
@@ -69,6 +70,10 @@ export default function App() {
     setLightingPreset(presetId);
   }, []);
 
+  const handleToggleShadows = useCallback(() => {
+    setEnableShadows((prev) => !prev);
+  }, []);
+
   const handleModelLoaded = useCallback((stats) => {
     setModelStats(stats);
   }, []);
@@ -89,6 +94,7 @@ export default function App() {
         mdeTextureMode={mdeTextureMode}
         buildingTextureMode={buildingTextureMode}
         lightingPreset={lightingPreset}
+        enableShadows={enableShadows}
         onModelLoaded={handleModelLoaded}
       />
 
@@ -121,6 +127,8 @@ export default function App() {
           onChangeBuildingTextureMode={handleChangeBuildingTextureMode}
           lightingPreset={lightingPreset}
           onSelectLighting={handleSelectLighting}
+          enableShadows={enableShadows}
+          onToggleShadows={handleToggleShadows}
           modelStats={modelStats}
         />
 

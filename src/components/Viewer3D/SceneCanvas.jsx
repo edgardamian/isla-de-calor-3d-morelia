@@ -17,13 +17,14 @@ export default function SceneCanvas({
   mdeTextureMode = 'thermal',
   buildingTextureMode = 'thermal',
   lightingPreset,
+  enableShadows = true,
   onModelLoaded,
   onControlsReady,
 }) {
   return (
     <div className="absolute inset-0 w-full h-full bg-slate-950 overflow-hidden">
       <Canvas
-        shadows
+        shadows={enableShadows}
         camera={{
           position: [42, 36, 42],
           fov: 45,
@@ -39,7 +40,10 @@ export default function SceneCanvas({
         }}
         dpr={[1, 2]}
       >
-        <SceneEnvironment lightingPreset={lightingPreset} />
+        <SceneEnvironment
+          lightingPreset={lightingPreset}
+          enableShadows={enableShadows}
+        />
         
         <CameraController
           activePreset={activePreset}
