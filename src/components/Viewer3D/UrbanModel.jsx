@@ -29,7 +29,7 @@ export default function UrbanModel({
       return { processedScene: null, modelBounds: null, meshRefs: {} };
     }
 
-    const scene = gltf.scene.clone(true);
+    const scene = gltf.scene;
     const rawBox = new THREE.Box3().setFromObject(scene);
     const size = new THREE.Vector3();
     rawBox.getSize(size);

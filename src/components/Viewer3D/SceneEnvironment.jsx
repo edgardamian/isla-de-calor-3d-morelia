@@ -123,15 +123,23 @@ export default function SceneEnvironment({
       {/* Target object at city center */}
       <primitive object={targetObjectRef.current} position={[0, 0, 0]} />
 
-      {/* Primary Directional Light (Sol enfocado y anclado a la base con líneas rectas continuas) */}
+      {/* Primary Directional Light */}
       <directionalLight
         position={solarState.dirPosition}
         target={targetObjectRef.current}
         intensity={solarState.dirIntensity}
         color={solarState.dirColor}
         castShadow={enableShadows}
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={
+          typeof window !== 'undefined' && (window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
+            ? 1024
+            : 2048
+        }
+        shadow-mapSize-height={
+          typeof window !== 'undefined' && (window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
+            ? 1024
+            : 2048
+        }
         shadow-camera-near={1}
         shadow-camera-far={220}
         shadow-camera-left={-26}

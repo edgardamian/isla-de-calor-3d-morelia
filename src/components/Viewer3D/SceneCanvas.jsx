@@ -92,11 +92,22 @@ export default function SceneCanvas({
         gl={{
           antialias: true,
           alpha: false,
-          powerPreference: 'high-performance',
+          powerPreference: 'default',
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.2,
+          preserveDrawingBuffer: false,
         }}
-        dpr={[1, 1.5]}
+        dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? [1, 1.2] : [1, 1.5]}
+        onCreated={({ gl }) => {
+          gl.domElement.addEventListener(
+            'webglcontextlost',
+            (e) => {
+              e.preventDefault();
+              console.warn('WebGL context lost, preventing crash.');
+            },
+            false
+          );
+        }}
       >
         <SceneEnvironment
           sunTime={sunTime}
