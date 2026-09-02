@@ -93,23 +93,24 @@ export default function ThermalInspectorCard({ probeData, onClose }) {
           </div>
         </div>
 
-        {/* Thermal Bar Relative to Scale */}
+        {/* Thermal Bar Relative to Scale with Exact 16-Stop Calibrated Colormap */}
         <div className="space-y-1">
-          <div className="flex justify-between text-[8px] font-mono text-slate-400">
-            <span>19.0°C (Mín)</span>
-            <span className="text-amber-300">Media 30.2°C</span>
-            <span>43.0°C (Máx)</span>
+          <div className="flex justify-between text-[8px] font-mono text-slate-300 font-medium">
+            <span className="text-[#00bfff] font-bold">19.0°C</span>
+            <span className="text-[#ffff00]">Media 30.2°C</span>
+            <span className="text-[#ef4444] font-bold">43.0°C</span>
           </div>
-          <div className="relative h-1.5 w-full bg-slate-800 rounded-full overflow-hidden p-0.5 border border-white/5">
+          <div className="relative h-2.5 w-full bg-slate-900 rounded-full p-0.5 border border-white/20 shadow-inner">
             <div
-              className="h-full rounded-full"
+              className="h-full rounded-full w-full"
               style={{
                 background:
-                  'linear-gradient(to right, #0000bf 0%, #00ffff 33%, #ffff00 66%, #bf0000 100%)',
+                  'linear-gradient(to right, #0000bf 0%, #0000ff 6.7%, #003fff 13.3%, #007fff 20%, #00bfff 26.7%, #00ffff 33.3%, #3fffff 40%, #7fffbf 46.7%, #bfff7f 53.3%, #ffff3f 60%, #ffff00 66.7%, #ffbf00 73.3%, #ff7f00 80%, #ff3f00 86.7%, #ff0000 93.3%, #bf0000 100%)',
               }}
             />
+            {/* Position indicator bead */}
             <div
-              className="absolute top-0 bottom-0 w-1.5 bg-white rounded-full shadow-[0_0_6px_rgba(255,255,255,0.9)] -translate-x-0.5"
+              className="absolute -top-0.5 bottom-0 w-2.5 h-3.5 bg-white rounded-full border border-slate-900 shadow-[0_0_8px_rgba(255,255,255,1)] -translate-x-1/2 transition-all duration-150"
               style={{ left: `${progressPercent}%` }}
             />
           </div>

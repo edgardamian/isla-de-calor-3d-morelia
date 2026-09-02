@@ -425,7 +425,7 @@ export default function UrbanModel({
       >
         <primitive
           object={processedScene}
-          onClick={handleClick}
+          onClick={isProbeActive ? handleClick : undefined}
         />
       </group>
     </group>
