@@ -105,8 +105,8 @@ export default function UrbanModel({
               originalTexturesRef.current.set(key, mat.map);
             }
 
-            mat.side = THREE.FrontSide;
-            mat.shadowSide = THREE.FrontSide;
+            mat.side = THREE.DoubleSide;
+            mat.shadowSide = isBuilding ? THREE.BackSide : THREE.FrontSide;
             mat.depthWrite = true;
             mat.depthTest = true;
 
