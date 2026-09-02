@@ -52,7 +52,7 @@ export default function LoadingScreen({ isLoaded = false }) {
       <div className="absolute w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none -top-10 left-10"></div>
 
       <div className="relative z-10 flex flex-col items-center max-w-md w-full px-6 text-center">
-        
+
         {/* Minimalist 🥵 Face & Morelia Aqueduct Icon */}
         <div className="relative mb-6 flex items-center justify-center">
           <div className="w-28 h-28 rounded-3xl bg-slate-900/90 border border-orange-500/30 shadow-[0_0_30px_rgba(249,115,22,0.25)] flex items-center justify-center backdrop-blur-md p-2">
@@ -70,7 +70,7 @@ export default function LoadingScreen({ isLoaded = false }) {
             Isla de Calor Urbana
           </h2>
           <p className="text-xs text-slate-400">
-            Ciudad de Morelia • MDE & Morfología
+            Ciudad de Morelia • Gemelo Digital V1.01
           </p>
         </div>
 
