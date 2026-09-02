@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 export default function SceneEnvironment({
-  sunTime = 11.1, // Decimal hours (e.g. 11.1 = 11:06 AM)
+  sunTime = 7.0, // Decimal hours (e.g. 7.0 = 07:00 AM)
   enableShadows = true,
 }) {
   const targetObjectRef = useRef(new THREE.Object3D());

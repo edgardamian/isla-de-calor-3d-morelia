@@ -17,7 +17,7 @@ export default function SceneCanvas({
   mdeTextureMode = 'thermal',
   buildingTextureMode = 'thermal',
   lightingPreset,
-  sunTime = 11.1,
+  sunTime = 7.0,
   enableShadows = true,
   onModelLoaded,
   onControlsReady,

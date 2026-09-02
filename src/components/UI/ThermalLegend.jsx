@@ -54,7 +54,7 @@ export default function ThermalLegend() {
             <span className="text-[#7fffbf]">28.6°C</span>
             <span className="text-[#ffff00]">33.4°C</span>
             <span className="text-[#ff7f00]">38.2°C</span>
-            <span className="text-[#bf0000] font-extrabold bg-red-950/80 px-1 py-0.2 rounded border border-red-500/60">43.0°C</span>
+            <span className="text-[#ef4444] font-bold">43.0°C</span>
           </div>
         </div>
 

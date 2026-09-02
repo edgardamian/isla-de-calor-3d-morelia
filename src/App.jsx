@@ -21,8 +21,8 @@ export default function App() {
   const [showBuildings, setShowBuildings] = useState(true);
   const [buildingTextureMode, setBuildingTextureMode] = useState('thermal'); // 'thermal' | 'architectural'
   
-  const [lightingPreset, setLightingPreset] = useState('landsatReal');
-  const [sunTime, setSunTime] = useState(11.1); // 11:06 AM (Landsat)
+  const [lightingPreset, setLightingPreset] = useState('sunrise');
+  const [sunTime, setSunTime] = useState(7.0); // 07:00 AM (Amanecer)
   const [isPlayingShadows, setIsPlayingShadows] = useState(false);
   const [shadowSpeed, setShadowSpeed] = useState(1); // 1x, 2x, 4x
   const [enableShadows, setEnableShadows] = useState(true);
@@ -96,7 +96,7 @@ export default function App() {
 
   const handleSelectLighting = useCallback((presetId) => {
     setLightingPreset(presetId);
-    if (presetId === 'sunrise') setSunTime(7.5);
+    if (presetId === 'sunrise') setSunTime(7.0);
     else if (presetId === 'landsatReal') setSunTime(11.1);
     else if (presetId === 'zenith') setSunTime(13.0);
     else if (presetId === 'sunset') setSunTime(18.75);

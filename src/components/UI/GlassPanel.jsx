@@ -559,7 +559,7 @@ export default function GlassPanel({
               {/* Quick Solar Preset Buttons */}
               <div className="grid grid-cols-2 gap-1.5">
                 {[
-                  { id: 'sunrise', label: 'Amanecer', time: '07:30 AM', icon: Sunrise, color: 'text-amber-300' },
+                  { id: 'sunrise', label: 'Amanecer', time: '07:00 AM', icon: Sunrise, color: 'text-amber-300' },
                   { id: 'landsatReal', label: 'Paso Satélite', time: '11:06 AM', icon: Satellite, color: 'text-cyan-400' },
                   { id: 'zenith', label: 'Cenital', time: '01:00 PM', icon: Sun, color: 'text-yellow-300' },
                   { id: 'sunset', label: 'Atardecer', time: '06:45 PM', icon: Sunset, color: 'text-orange-400' },
