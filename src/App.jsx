@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import SceneCanvas from './components/Viewer3D/SceneCanvas';
 import GlassPanel from './components/UI/GlassPanel';
 import ThermalLegend from './components/UI/ThermalLegend';
+import ThermalInspectorCard from './components/UI/ThermalInspectorCard';
 import ViewControlsHUD from './components/UI/ViewControlsHUD';
 import LoadingScreen from './components/UI/LoadingScreen';
 
@@ -216,7 +217,15 @@ export default function App() {
         />
 
         {/* Bottom Right Land Surface Temperature Legend */}
-        {mdeTextureMode === 'thermal' && <ThermalLegend />}
+        {mdeTextureMode === 'thermal' && !probeData && <ThermalLegend />}
+
+        {/* Compact & Well-proportioned Thermal Identifier Card */}
+        {probeData && (
+          <ThermalInspectorCard
+            probeData={probeData}
+            onClose={handleCloseProbe}
+          />
+        )}
 
         {/* Top Right HUD Action Controls */}
         <ViewControlsHUD
