@@ -53,21 +53,11 @@ export default function LoadingScreen({ isLoaded = false }) {
 
       <div className="relative z-10 flex flex-col items-center max-w-md w-full px-6 text-center">
         
-        {/* Animated Heat Person with Flame Silhouette Aura */}
+        {/* Minimalist Heat Person Icon */}
         <div className="relative mb-6 flex items-center justify-center">
-          {/* Radiant pulsating backdrop */}
-          <div className="absolute w-32 h-32 rounded-full bg-gradient-to-t from-red-600/40 via-orange-500/30 to-amber-400/20 blur-2xl animate-pulse" />
-          
-          <div className="w-28 h-28 rounded-3xl bg-slate-900/80 border border-orange-500/30 shadow-[0_0_30px_rgba(249,115,22,0.3)] flex items-center justify-center relative overflow-hidden backdrop-blur-md">
-            {/* Spinning thermal aura ring */}
-            <div className="absolute inset-0 border-2 border-transparent border-t-orange-400 border-r-red-500 border-b-amber-400 rounded-3xl animate-spin duration-3000"></div>
-            
-            {/* Person suffering heat surrounded by flame contour */}
-            <HeatPersonSilhouette className="w-20 h-20" animated={true} showSweat={true} />
+          <div className="w-24 h-24 rounded-3xl bg-slate-900/80 border border-orange-500/25 shadow-[0_0_25px_rgba(249,115,22,0.2)] flex items-center justify-center backdrop-blur-md">
+            <HeatPersonSilhouette className="w-14 h-14" animated={true} showSweat={true} />
           </div>
-
-          {/* Radiating heat wave ring */}
-          <div className="absolute -inset-3 border border-orange-500/30 rounded-full animate-ping opacity-25 pointer-events-none"></div>
         </div>
 
         {/* Title */}
