@@ -1,6 +1,7 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef, useCallback } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
+import { sampleThermalIntersection } from '../../utils/thermalSampler';
 
 const MODEL_PATH = `${import.meta.env.BASE_URL}ISLA_DE_CALOR_3D_V5.glb`;
 
@@ -13,6 +14,8 @@ export default function UrbanModel({
   mdeTextureMode = 'thermal', // 'thermal' | 'topography'
   buildingTextureMode = 'thermal', // 'thermal' | 'architectural'
   onLoaded,
+  onInspectPoint,
+  isProbeActive = true,
 }) {
   const gltf = useGLTF(MODEL_PATH);
 
@@ -389,6 +392,19 @@ export default function UrbanModel({
     }
   }, [modelBounds, onLoaded]);
 
+  const handleClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (onInspectPoint && isProbeActive) {
+        const probeResult = sampleThermalIntersection(e);
+        if (probeResult) {
+          onInspectPoint(probeResult);
+        }
+      }
+    },
+    [onInspectPoint, isProbeActive]
+  );
+
   if (!processedScene || !modelBounds) return null;
 
   const { center, scaleFactor } = modelBounds;
@@ -407,7 +423,10 @@ export default function UrbanModel({
           -center.z * scaleFactor,
         ]}
       >
-        <primitive object={processedScene} />
+        <primitive
+          object={processedScene}
+          onClick={handleClick}
+        />
       </group>
     </group>
   );

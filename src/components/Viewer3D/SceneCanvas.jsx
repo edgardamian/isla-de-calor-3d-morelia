@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import UrbanModel from './UrbanModel';
 import CameraController from './CameraController';
 import SceneEnvironment from './SceneEnvironment';
+import ThermalProbeMarker from './ThermalProbeMarker';
 
 export default function SceneCanvas({
   activePreset,
@@ -21,6 +22,10 @@ export default function SceneCanvas({
   enableShadows = true,
   onModelLoaded,
   onControlsReady,
+  probeData,
+  onInspectPoint,
+  onCloseProbe,
+  isProbeActive = true,
 }) {
   return (
     <div className="absolute inset-0 w-full h-full bg-slate-950 overflow-hidden">
@@ -64,7 +69,16 @@ export default function SceneCanvas({
             mdeTextureMode={mdeTextureMode}
             buildingTextureMode={buildingTextureMode}
             onLoaded={onModelLoaded}
+            onInspectPoint={onInspectPoint}
+            isProbeActive={isProbeActive}
           />
+
+          {probeData && (
+            <ThermalProbeMarker
+              probeData={probeData}
+              onClose={onCloseProbe}
+            />
+          )}
         </Suspense>
       </Canvas>
     </div>

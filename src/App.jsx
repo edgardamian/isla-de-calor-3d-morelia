@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import SceneCanvas from './components/Viewer3D/SceneCanvas';
 import GlassPanel from './components/UI/GlassPanel';
 import ThermalLegend from './components/UI/ThermalLegend';
+import ThermalInspectorCard from './components/UI/ThermalInspectorCard';
 import ViewControlsHUD from './components/UI/ViewControlsHUD';
 import LoadingScreen from './components/UI/LoadingScreen';
 
@@ -27,6 +28,10 @@ export default function App() {
   const [shadowSpeed, setShadowSpeed] = useState(1); // 1x, 2x, 4x
   const [enableShadows, setEnableShadows] = useState(true);
   const [modelStats, setModelStats] = useState(null);
+
+  // Interactive Thermal Probe state
+  const [probeData, setProbeData] = useState(null);
+  const [isProbeActive, setIsProbeActive] = useState(true);
 
   // Smooth real-time shadow & solar animation loop
   React.useEffect(() => {
@@ -127,6 +132,22 @@ export default function App() {
     setModelStats(stats);
   }, []);
 
+  const handleInspectPoint = useCallback((data) => {
+    setProbeData(data);
+  }, []);
+
+  const handleCloseProbe = useCallback(() => {
+    setProbeData(null);
+  }, []);
+
+  const handleToggleProbe = useCallback(() => {
+    setIsProbeActive((prev) => {
+      const next = !prev;
+      if (!next) setProbeData(null);
+      return next;
+    });
+  }, []);
+
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-slate-950 select-none">
       
@@ -146,6 +167,10 @@ export default function App() {
         sunTime={sunTime}
         enableShadows={enableShadows}
         onModelLoaded={handleModelLoaded}
+        probeData={probeData}
+        onInspectPoint={handleInspectPoint}
+        onCloseProbe={handleCloseProbe}
+        isProbeActive={isProbeActive}
       />
 
       {/* Loading Screen using Drei useProgress hook */}
@@ -186,13 +211,30 @@ export default function App() {
           enableShadows={enableShadows}
           onToggleShadows={handleToggleShadows}
           modelStats={modelStats}
+          isProbeActive={isProbeActive}
+          onToggleProbe={handleToggleProbe}
+          probeData={probeData}
         />
 
         {/* Bottom Right Land Surface Temperature Legend */}
-        {mdeTextureMode === 'thermal' && <ThermalLegend />}
+        {mdeTextureMode === 'thermal' && !probeData && <ThermalLegend />}
+
+        {/* Interactive Point Thermal Inspector Card (Bottom Center) */}
+        {probeData && (
+          <ThermalInspectorCard
+            probeData={probeData}
+            onClose={handleCloseProbe}
+          />
+        )}
 
         {/* Top Right HUD Action Controls */}
-        <ViewControlsHUD onResetView={handleResetView} />
+        <ViewControlsHUD
+          onResetView={handleResetView}
+          isProbeActive={isProbeActive}
+          onToggleProbe={handleToggleProbe}
+          hasProbeSelection={!!probeData}
+          onClearProbe={handleCloseProbe}
+        />
         
       </div>
       

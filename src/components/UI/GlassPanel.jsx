@@ -21,6 +21,7 @@ import {
   Play,
   Pause,
   CloudSun,
+  Thermometer,
 } from 'lucide-react';
 
 function formatSolarTime(decimalHours) {
@@ -56,7 +57,7 @@ export default function GlassPanel({
   onChangeBuildingTextureMode,
   lightingPreset,
   onSelectLighting,
-  sunTime = 11.1,
+  sunTime = 7.0,
   onChangeSunTime,
   isPlayingShadows = false,
   onTogglePlayShadows,
@@ -65,6 +66,9 @@ export default function GlassPanel({
   enableShadows = true,
   onToggleShadows,
   modelStats,
+  isProbeActive = true,
+  onToggleProbe,
+  probeData,
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -277,6 +281,45 @@ export default function GlassPanel({
                     <Building2 className={`w-3.5 h-3.5 ${buildingTextureMode === 'architectural' ? 'text-white' : 'text-slate-400'}`} />
                     <span>Blanco</span>
                   </button>
+                </div>
+              )}
+            </div>
+
+            {/* 3. Interactive Thermal Probe Tool Switch */}
+            <div className="pt-2 border-t border-white/10 space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-medium text-slate-200 flex items-center gap-1.5">
+                  <Thermometer className={`w-3.5 h-3.5 ${isProbeActive ? 'text-orange-400 animate-pulse' : 'text-slate-400'}`} />
+                  Sonda Térmica Interactiva
+                </span>
+                <button
+                  onClick={onToggleProbe}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1 ${
+                    isProbeActive
+                      ? 'bg-orange-500/25 text-orange-300 border border-orange-500/50'
+                      : 'bg-slate-800 text-slate-500 hover:text-slate-300'
+                  }`}
+                  title={isProbeActive ? 'Desactivar Sonda' : 'Activar Sonda'}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${isProbeActive ? 'bg-orange-400 animate-ping' : 'bg-slate-500'}`} />
+                  <span>{isProbeActive ? 'ACTIVA' : 'OFF'}</span>
+                </button>
+              </div>
+
+              <p className="text-[10px] text-slate-400 leading-tight">
+                {isProbeActive
+                  ? '👉 Toca o haz clic en cualquier edificio o terreno para medir su temperatura en °C y altitud.'
+                  : 'Sonda desactivada. Actívala para inspeccionar puntos térmicos.'}
+              </p>
+
+              {probeData && (
+                <div className="flex items-center justify-between bg-slate-950/80 p-2 rounded-xl border border-orange-500/30 text-[10px] font-mono mt-1">
+                  <span className="text-slate-300 truncate max-w-[140px]">
+                    📍 {probeData.objectType}
+                  </span>
+                  <span className="font-bold text-orange-400 text-xs">
+                    {probeData.temperature?.toFixed(1)} °C
+                  </span>
                 </div>
               )}
             </div>

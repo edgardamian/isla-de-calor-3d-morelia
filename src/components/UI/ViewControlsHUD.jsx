@@ -9,9 +9,16 @@ import {
   ZoomIn,
   X,
   Compass,
+  Thermometer,
 } from 'lucide-react';
 
-export default function ViewControlsHUD({ onResetView }) {
+export default function ViewControlsHUD({
+  onResetView,
+  isProbeActive = true,
+  onToggleProbe,
+  hasProbeSelection = false,
+  onClearProbe,
+}) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -31,6 +38,21 @@ export default function ViewControlsHUD({ onResetView }) {
     <>
       {/* Top Right Floating Toolbar */}
       <div className="fixed top-4 right-4 z-20 pointer-events-auto flex items-center gap-2">
+        
+        {/* Interactive Thermal Probe Toggle */}
+        <button
+          onClick={onToggleProbe}
+          className={`p-2.5 rounded-2xl flex items-center gap-1.5 text-xs font-semibold shadow-xl transition-all border ${
+            isProbeActive
+              ? 'bg-gradient-to-r from-orange-500/25 to-red-500/25 border-orange-500/50 text-white shadow-orange-500/20'
+              : 'glass-button text-slate-400 hover:text-white border-white/15'
+          }`}
+          title={isProbeActive ? 'Sonda Térmica Activa (Haz clic en un edificio/terreno)' : 'Activar Sonda Térmica'}
+        >
+          <Thermometer className={`w-4 h-4 ${isProbeActive ? 'text-orange-400 animate-pulse' : 'text-slate-400'}`} />
+          <span className="hidden sm:inline">{isProbeActive ? 'Sonda Activa' : 'Sonda'}</span>
+        </button>
+
         {/* Reset View Quick Button */}
         <button
           onClick={onResetView}
@@ -101,6 +123,16 @@ export default function ViewControlsHUD({ onResetView }) {
                 <div>
                   <p className="font-semibold text-slate-200">Rotar Cámara (Órbita)</p>
                   <p className="text-slate-400">Clic primario (izquierdo) + arrastrar o un dedo en pantallas táctiles.</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-white/5">
+                <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0">
+                  <Thermometer className="w-4 h-4 text-orange-400" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-200">Sonda Térmica LST</p>
+                  <p className="text-slate-400">Haz clic sobre cualquier edificación o terreno para medir su temperatura en °C y altitud.</p>
                 </div>
               </div>
 
