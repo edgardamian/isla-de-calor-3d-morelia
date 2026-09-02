@@ -21,7 +21,7 @@ export default function ThermalInspectorCard({ probeData, onClose }) {
   const color = classification?.colorHex || '#f97316';
   const progressPercent = Math.min(
     100,
-    Math.max(0, ((temperature - 19.0) / (43.0 - 19.0)) * 100)
+    Math.max(0, ((temperature - 19.0) / (45.0 - 19.0)) * 100)
   );
 
   return (
@@ -88,7 +88,7 @@ export default function ThermalInspectorCard({ probeData, onClose }) {
               {classification.category}
             </span>
             <span className="text-[9px] font-mono text-slate-400">
-              Δ vs Media: {(temperature - 30.2 > 0 ? '+' : '') + (temperature - 30.2).toFixed(1)}°C
+              Δ vs Media: {(temperature - 31.1 > 0 ? '+' : '') + (temperature - 31.1).toFixed(1)}°C
             </span>
           </div>
         </div>
@@ -97,8 +97,8 @@ export default function ThermalInspectorCard({ probeData, onClose }) {
         <div className="space-y-1">
           <div className="flex justify-between text-[8px] font-mono text-slate-300 font-medium">
             <span className="text-[#00bfff] font-bold">19.0°C</span>
-            <span className="text-[#ffff00]">Media 30.2°C</span>
-            <span className="text-[#ef4444] font-bold">43.0°C</span>
+            <span className="text-[#ffff00]">Media 31.1°C</span>
+            <span className="text-[#ef4444] font-bold">45.0°C</span>
           </div>
           <div className="relative h-2.5 w-full bg-slate-900 rounded-full p-0.5 border border-white/20 shadow-inner">
             <div

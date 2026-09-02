@@ -366,7 +366,7 @@ export default function GlassPanel({
                 Métricas Térmicas LST
               </label>
               <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
-                19.0°C – 43.0°C
+                19.0°C – 45.0°C
               </span>
             </div>
 
@@ -374,7 +374,7 @@ export default function GlassPanel({
               <div className="p-2.5 rounded-2xl bg-gradient-to-br from-red-950/40 to-slate-900/60 border border-red-500/20 flex flex-col justify-between">
                 <span className="text-[10px] text-red-300/80 font-medium">Temp. Máxima</span>
                 <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-lg font-bold text-red-400 font-mono">43.0</span>
+                  <span className="text-lg font-bold text-red-400 font-mono">45.0</span>
                   <span className="text-xs text-red-300 font-semibold">°C</span>
                 </div>
               </div>
@@ -382,7 +382,7 @@ export default function GlassPanel({
               <div className="p-2.5 rounded-2xl bg-gradient-to-br from-amber-950/30 to-slate-900/60 border border-amber-500/20 flex flex-col justify-between">
                 <span className="text-[10px] text-amber-300/80 font-medium">Temp. Promedio</span>
                 <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-lg font-bold text-amber-400 font-mono">30.2</span>
+                  <span className="text-lg font-bold text-amber-400 font-mono">31.1</span>
                   <span className="text-xs text-amber-300 font-semibold">°C</span>
                 </div>
               </div>
@@ -398,7 +398,7 @@ export default function GlassPanel({
               <div className="p-2.5 rounded-2xl bg-gradient-to-br from-purple-950/30 to-slate-900/60 border border-purple-500/20 flex flex-col justify-between">
                 <span className="text-[10px] text-purple-300/80 font-medium">Rango Térmico (ΔT)</span>
                 <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-lg font-bold text-purple-300 font-mono">24.0</span>
+                  <span className="text-lg font-bold text-purple-400 font-mono">26.0</span>
                   <span className="text-xs text-purple-300 font-semibold">°C</span>
                 </div>
               </div>

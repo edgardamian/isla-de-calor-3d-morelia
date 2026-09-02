@@ -19,7 +19,7 @@ export default function ThermalLegend() {
                 Escala Térmica LST
               </span>
               <span className="text-[10px] font-mono text-cyan-400">
-                19.0°C – 43.0°C
+                19.0°C – 45.0°C
               </span>
             </div>
           </div>
@@ -50,11 +50,11 @@ export default function ThermalLegend() {
           {/* Temperature Tick Labels */}
           <div className="flex justify-between items-center text-[10px] font-mono text-slate-200 font-semibold px-0.5">
             <span className="text-[#00bfff] font-bold">19.0°C</span>
-            <span className="text-[#00ffff]">23.8°C</span>
-            <span className="text-[#7fffbf]">28.6°C</span>
-            <span className="text-[#ffff00]">33.4°C</span>
-            <span className="text-[#ff7f00]">38.2°C</span>
-            <span className="text-[#ef4444] font-bold">43.0°C</span>
+            <span className="text-[#00ffff]">24.2°C</span>
+            <span className="text-[#7fffbf]">29.4°C</span>
+            <span className="text-[#ffff00]">34.6°C</span>
+            <span className="text-[#ff7f00]">39.8°C</span>
+            <span className="text-[#ef4444] font-bold">45.0°C</span>
           </div>
         </div>
 
@@ -68,11 +68,11 @@ export default function ThermalLegend() {
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#ffff00]"></span>
-                <span>Media (30.2°C)</span>
+                <span>Media (31.1°C)</span>
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#bf0000] border border-white/30"></span>
-                <span>Máxima (43.0°C)</span>
+                <span>Máxima (45.0°C)</span>
               </span>
             </div>
             <div className="text-[9px] text-slate-400 pt-1 border-t border-white/5 flex items-center justify-between font-mono">
