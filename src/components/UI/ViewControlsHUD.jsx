@@ -36,23 +36,18 @@ export default function ViewControlsHUD({
 
   return (
     <>
+      {/* Top Center Discreet Instruction Pill */}
+      {!hasProbeSelection && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-20 pointer-events-none hidden md:flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-950/80 border border-white/15 text-slate-200 text-xs shadow-xl backdrop-blur-md animate-in fade-in duration-300">
+          <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+          <span>
+            Haz <strong className="text-orange-400">clic derecho</strong> sobre el terreno o edificios para consultar la temperatura
+          </span>
+        </div>
+      )}
+
       {/* Top Right Floating Toolbar */}
       <div className="fixed top-4 right-4 z-20 pointer-events-auto flex items-center gap-2">
-        
-        {/* Interactive Thermal Identifier Toggle */}
-        <button
-          onClick={onToggleProbe}
-          className={`p-2.5 rounded-2xl flex items-center gap-1.5 text-xs font-semibold shadow-xl transition-all border ${
-            isProbeActive
-              ? 'bg-gradient-to-r from-orange-500/25 to-red-500/25 border-orange-500/50 text-white shadow-orange-500/20'
-              : 'glass-button text-slate-400 hover:text-white border-white/15'
-          }`}
-          title={isProbeActive ? 'Identificador Térmico Activo (Haz clic en un edificio/terreno)' : 'Activar Identificador Térmico'}
-        >
-          <Thermometer className={`w-4 h-4 ${isProbeActive ? 'text-orange-400 animate-pulse' : 'text-slate-400'}`} />
-          <span className="hidden sm:inline">{isProbeActive ? 'Identificador ON' : 'Identificador'}</span>
-        </button>
-
         {/* Reset View Quick Button */}
         <button
           onClick={onResetView}
@@ -80,7 +75,7 @@ export default function ViewControlsHUD({
         <button
           onClick={() => setShowHelp(true)}
           className="glass-button p-2.5 rounded-2xl text-slate-300 hover:text-white shadow-xl border border-white/15"
-          title="Guía de Navegación 3D"
+          title="Guía de Navegación e Instrucciones"
         >
           <HelpCircle className="w-4 h-4 text-blue-400" />
         </button>
@@ -89,20 +84,20 @@ export default function ViewControlsHUD({
       {/* Navigation Help Modal */}
       {showHelp && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md pointer-events-auto">
-          <div className="glass-panel w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+          <div className="glass-panel w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
-                  <Compass className="w-5 h-5 text-blue-400" />
+                <div className="w-9 h-9 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center">
+                  <Thermometer className="w-5 h-5 text-orange-400" />
                 </div>
                 <div>
                   <h3 className="font-bold text-white text-base">
-                    Controles de Navegación 3D
+                    Instrucciones y Controles 3D
                   </h3>
                   <p className="text-xs text-slate-400">
-                    Interacción con el modelo topográfico
+                    Uso del Identificador Térmico y Navegación
                   </p>
                 </div>
               </div>
@@ -114,45 +109,53 @@ export default function ViewControlsHUD({
               </button>
             </div>
 
+            {/* Step-by-step Thermal Identifier Guide */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-br from-orange-950/40 to-slate-900/60 border border-orange-500/30 space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-orange-500 text-white uppercase tracking-wider">
+                  Identificador Térmico LST
+                </span>
+                <span className="text-[10px] text-orange-300 font-mono">¿Cómo usarlo?</span>
+              </div>
+              <ol className="text-xs text-slate-300 space-y-1.5 list-decimal list-inside leading-relaxed">
+                <li>
+                  <strong className="text-white">Muestreo Instantáneo:</strong> Haz <span className="text-orange-400 font-bold">clic derecho</span> sobre cualquier edificación o relieve para medir su temperatura en °C y altitud.
+                </li>
+                <li>
+                  <strong className="text-white">Auto-Apagado de Máxima Fluidez:</strong> En cuanto gires la rueda del ratón (zoom) o arrastres para moverte, el pin y la tarjeta se ocultan de inmediato para mantener 60 FPS estables.
+                </li>
+              </ol>
+            </div>
+
             {/* Instruction cards */}
-            <div className="space-y-2.5 text-xs">
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-white/5">
+            <div className="space-y-2 text-xs">
+              <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-900/60 border border-white/5">
                 <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0">
                   <MousePointer className="w-4 h-4 text-orange-400" />
                 </div>
                 <div>
                   <p className="font-semibold text-slate-200">Rotar Cámara (Órbita)</p>
-                  <p className="text-slate-400">Clic primario (izquierdo) + arrastrar o un dedo en pantallas táctiles.</p>
+                  <p className="text-slate-400">Clic primario (izquierdo) + arrastrar.</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-white/5">
-                <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0">
-                  <Thermometer className="w-4 h-4 text-orange-400" />
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-200">Identificador Térmico LST</p>
-                  <p className="text-slate-400">Haz clic sobre cualquier edificación o terreno para identificar su temperatura en °C y altitud.</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-white/5">
+              <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-900/60 border border-white/5">
                 <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
                   <Move className="w-4 h-4 text-blue-400" />
                 </div>
                 <div>
                   <p className="font-semibold text-slate-200">Desplazar / Paneo</p>
-                  <p className="text-slate-400">Clic secundario (derecho) o Shift + arrastrar (dos dedos en táctil).</p>
+                  <p className="text-slate-400">Shift + arrastrar o arrastrar con clic derecho.</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/60 border border-white/5">
+              <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-900/60 border border-white/5">
                 <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
                   <ZoomIn className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
                   <p className="font-semibold text-slate-200">Acercar / Alejar (Zoom)</p>
-                  <p className="text-slate-400">Rueda de desplazamiento del ratón o pellizco en dispositivos móviles.</p>
+                  <p className="text-slate-400">Rueda de desplazamiento del ratón.</p>
                 </div>
               </div>
             </div>

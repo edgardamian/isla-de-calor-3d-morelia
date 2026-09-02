@@ -15,7 +15,6 @@ export default function UrbanModel({
   buildingTextureMode = 'thermal', // 'thermal' | 'architectural'
   onLoaded,
   onInspectPoint,
-  isProbeActive = true,
 }) {
   const gltf = useGLTF(MODEL_PATH);
 
@@ -392,19 +391,6 @@ export default function UrbanModel({
     }
   }, [modelBounds, onLoaded]);
 
-  const handleClick = useCallback(
-    (e) => {
-      e.stopPropagation();
-      if (onInspectPoint && isProbeActive) {
-        const probeResult = sampleThermalIntersection(e);
-        if (probeResult) {
-          onInspectPoint(probeResult);
-        }
-      }
-    },
-    [onInspectPoint, isProbeActive]
-  );
-
   if (!processedScene || !modelBounds) return null;
 
   const { center, scaleFactor } = modelBounds;
@@ -423,10 +409,7 @@ export default function UrbanModel({
           -center.z * scaleFactor,
         ]}
       >
-        <primitive
-          object={processedScene}
-          onClick={isProbeActive ? handleClick : undefined}
-        />
+        <primitive object={processedScene} />
       </group>
     </group>
   );

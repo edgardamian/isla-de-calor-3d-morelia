@@ -9,6 +9,7 @@ export default function CameraController({
   resetTrigger = 0,
   autoRotate = false,
   onControlsReady,
+  onCameraMoveStart,
 }) {
   const { camera } = useThree();
   const controlsRef = useRef(null);
@@ -62,7 +63,11 @@ export default function CameraController({
       enablePan={true}
       enableRotate={true}
       enableDamping={true}
-      dampingFactor={0.06}
+      dampingFactor={0.09}
+      screenSpacePanning={true}
+      zoomSpeed={1.5}
+      panSpeed={1.6}
+      rotateSpeed={1.0}
       // Required constraint: maxPolarAngle strictly <= Math.PI / 2.1
       maxPolarAngle={Math.PI / 2.1}
       minPolarAngle={0.05}
@@ -72,6 +77,7 @@ export default function CameraController({
       autoRotateSpeed={0.7}
       onStart={() => {
         isTransitioningRef.current = false;
+        if (onCameraMoveStart) onCameraMoveStart();
       }}
     />
   );

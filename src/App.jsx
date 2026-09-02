@@ -29,9 +29,8 @@ export default function App() {
   const [enableShadows, setEnableShadows] = useState(true);
   const [modelStats, setModelStats] = useState(null);
 
-  // Interactive Thermal Probe state (inactive by default)
+  // Interactive Thermal Probe state
   const [probeData, setProbeData] = useState(null);
-  const [isProbeActive, setIsProbeActive] = useState(false);
 
   // Smooth real-time shadow & solar animation loop
   React.useEffect(() => {
@@ -109,7 +108,6 @@ export default function App() {
 
   const handleChangeSunTime = useCallback((newTime) => {
     setSunTime(newTime);
-    // Sync closest preset name
     if (newTime <= 8.5) setLightingPreset('sunrise');
     else if (newTime > 8.5 && newTime <= 12.0) setLightingPreset('landsatReal');
     else if (newTime > 12.0 && newTime <= 15.0) setLightingPreset('zenith');
@@ -140,11 +138,10 @@ export default function App() {
     setProbeData(null);
   }, []);
 
-  const handleToggleProbe = useCallback(() => {
-    setIsProbeActive((prev) => {
-      const next = !prev;
-      if (!next) setProbeData(null);
-      return next;
+  const handleCameraMove = useCallback(() => {
+    setProbeData((prevData) => {
+      if (prevData !== null) return null;
+      return prevData;
     });
   }, []);
 
@@ -170,7 +167,7 @@ export default function App() {
         probeData={probeData}
         onInspectPoint={handleInspectPoint}
         onCloseProbe={handleCloseProbe}
-        isProbeActive={isProbeActive}
+        onCameraMove={handleCameraMove}
       />
 
       {/* Loading Screen using Drei useProgress hook */}
@@ -211,13 +208,10 @@ export default function App() {
           enableShadows={enableShadows}
           onToggleShadows={handleToggleShadows}
           modelStats={modelStats}
-          isProbeActive={isProbeActive}
-          onToggleProbe={handleToggleProbe}
-          probeData={probeData}
         />
 
-        {/* Bottom Right Land Surface Temperature Legend */}
-        {mdeTextureMode === 'thermal' && !probeData && <ThermalLegend />}
+        {/* Bottom Right Land Surface Temperature Legend & Expandable Metadata */}
+        {!probeData && <ThermalLegend modelStats={modelStats} />}
 
         {/* Compact & Well-proportioned Thermal Identifier Card */}
         {probeData && (
@@ -230,10 +224,7 @@ export default function App() {
         {/* Top Right HUD Action Controls */}
         <ViewControlsHUD
           onResetView={handleResetView}
-          isProbeActive={isProbeActive}
-          onToggleProbe={handleToggleProbe}
           hasProbeSelection={!!probeData}
-          onClearProbe={handleCloseProbe}
         />
         
       </div>

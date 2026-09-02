@@ -14,14 +14,14 @@ import {
   TrendingUp,
   Building2,
   ChevronLeft,
+  ChevronDown,
+  ChevronRight,
   Mountain,
   Sparkles,
   Palette,
   Clock,
   Play,
   Pause,
-  CloudSun,
-  Thermometer,
 } from 'lucide-react';
 
 function formatSolarTime(decimalHours) {
@@ -65,12 +65,9 @@ export default function GlassPanel({
   onChangeShadowSpeed,
   enableShadows = true,
   onToggleShadows,
-  modelStats,
-  isProbeActive = true,
-  onToggleProbe,
-  probeData,
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isSolarOpen, setIsSolarOpen] = useState(false); // Collapsed by default
 
   return (
     <aside
@@ -132,49 +129,8 @@ export default function GlassPanel({
             </button>
           </div>
 
-          {/* Satellite Capture Metadata Card */}
-          <div className="bg-slate-900/70 p-3 rounded-2xl border border-white/10 space-y-2 text-xs">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-slate-300 border-b border-white/5 pb-1.5">
-              <span className="flex items-center gap-1.5 text-cyan-400">
-                <Satellite className="w-3.5 h-3.5" />
-                Metadatos de Captura Satelital
-              </span>
-              <span className="text-emerald-400 font-mono">Sensor TIRS</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
-              <div className="flex flex-col bg-slate-950/50 p-2 rounded-xl border border-white/5">
-                <span className="text-slate-400 flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-orange-400" />
-                  Fecha / Hora
-                </span>
-                <span className="text-white font-bold mt-0.5">2025-10-19</span>
-                <span className="text-slate-400 text-[9px]">11:06:02</span>
-              </div>
-
-              <div className="flex flex-col bg-slate-950/50 p-2 rounded-xl border border-white/5">
-                <span className="text-slate-400 flex items-center gap-1">
-                  <CloudSun className="w-3 h-3 text-cyan-400" />
-                  Nubosidad
-                </span>
-                <span className="text-emerald-400 font-bold mt-0.5">0.02 %</span>
-                <span className="text-slate-400 text-[9px]">Cielo Despejado</span>
-              </div>
-
-              <div className="flex flex-col bg-slate-950/50 p-2 rounded-xl border border-white/5">
-                <span className="text-slate-400">Elevación Solar</span>
-                <span className="text-amber-300 font-bold mt-0.5">53.70 °</span>
-              </div>
-
-              <div className="flex flex-col bg-slate-950/50 p-2 rounded-xl border border-white/5">
-                <span className="text-slate-400">Azimut Solar</span>
-                <span className="text-amber-300 font-bold mt-0.5">145.28 °</span>
-              </div>
-            </div>
-          </div>
-
           {/* ======================================================== */}
-          {/* HERRAMIENTA DE CONTROL DE TEXTURAS Y CAPAS 3D            */}
+          {/* 1. HERRAMIENTA DE CONTROL DE TEXTURAS Y CAPAS 3D          */}
           {/* ======================================================== */}
           <div className="space-y-3 p-3.5 rounded-2xl bg-slate-900/70 border border-orange-500/20 shadow-inner">
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
@@ -183,7 +139,7 @@ export default function GlassPanel({
                 Texturas y Capas 3D
               </label>
               <span className="text-[10px] font-mono text-cyan-400">
-                19.0°C – 43.0°C
+                19.0°C – 45.0°C
               </span>
             </div>
 
@@ -224,18 +180,18 @@ export default function GlassPanel({
                     onClick={() => onChangeMDETextureMode('topography')}
                     className={`py-1.5 px-2 rounded-xl text-[11px] font-medium transition-all flex items-center justify-center gap-1.5 ${
                       mdeTextureMode === 'topography'
-                        ? 'bg-blue-500/30 border border-blue-500/50 text-white font-semibold shadow-sm'
+                        ? 'bg-blue-600/30 border border-blue-400 text-white font-semibold shadow-sm'
                         : 'glass-button text-slate-400 hover:text-slate-200'
                     }`}
                   >
                     <Mountain className={`w-3.5 h-3.5 ${mdeTextureMode === 'topography' ? 'text-blue-400' : 'text-slate-400'}`} />
-                    <span>Topografía</span>
+                    <span>Relieve Base</span>
                   </button>
                 </div>
               )}
             </div>
 
-            {/* 2. Buildings Texture Controls (Térmica y Blanco) */}
+            {/* 2. Buildings Texture Controls */}
             <div className="space-y-1.5 pt-2 border-t border-white/10">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-slate-200 flex items-center gap-1.5">
@@ -247,7 +203,7 @@ export default function GlassPanel({
                   className={`p-1 rounded-lg transition-colors flex items-center gap-1 text-[10px] ${
                     showBuildings ? 'text-amber-400 bg-amber-500/10' : 'text-slate-500 bg-slate-800'
                   }`}
-                  title={showBuildings ? 'Ocultar Edificios' : 'Mostrar Edificios'}
+                  title={showBuildings ? 'Ocultar Edificaciones' : 'Mostrar Edificaciones'}
                 >
                   {showBuildings ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                   <span>{showBuildings ? 'Visible' : 'Oculto'}</span>
@@ -263,10 +219,10 @@ export default function GlassPanel({
                         ? 'bg-gradient-to-r from-orange-500/30 to-red-500/30 border border-orange-500/50 text-white font-semibold shadow-sm'
                         : 'glass-button text-slate-400 hover:text-slate-200'
                     }`}
-                    title="Textura térmica original del modelo"
+                    title="Textura térmica continua proyectada"
                   >
                     <Flame className={`w-3.5 h-3.5 ${buildingTextureMode === 'thermal' ? 'text-orange-400' : 'text-slate-400'}`} />
-                    <span>Térmica</span>
+                    <span>Térmico</span>
                   </button>
 
                   <button
@@ -284,48 +240,11 @@ export default function GlassPanel({
                 </div>
               )}
             </div>
-
-            {/* 3. Interactive Thermal Identifier Tool Switch */}
-            <div className="pt-2 border-t border-white/10 space-y-1.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium text-slate-200 flex items-center gap-1.5">
-                  <Thermometer className={`w-3.5 h-3.5 ${isProbeActive ? 'text-orange-400 animate-pulse' : 'text-slate-400'}`} />
-                  Identificador Térmico
-                </span>
-                <button
-                  onClick={onToggleProbe}
-                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1 ${
-                    isProbeActive
-                      ? 'bg-orange-500/25 text-orange-300 border border-orange-500/50'
-                      : 'bg-slate-800 text-slate-500 hover:text-slate-300'
-                  }`}
-                  title={isProbeActive ? 'Desactivar Identificador' : 'Activar Identificador Térmico'}
-                >
-                  <span className={`w-1.5 h-1.5 rounded-full ${isProbeActive ? 'bg-orange-400 animate-ping' : 'bg-slate-500'}`} />
-                  <span>{isProbeActive ? 'ACTIVO' : 'OFF'}</span>
-                </button>
-              </div>
-
-              <p className="text-[10px] text-slate-400 leading-tight">
-                {isProbeActive
-                  ? '👉 Toca o haz clic en cualquier edificio o terreno para identificar su temperatura en °C y altitud.'
-                  : 'Identificador desactivado. Actívalo para consultar la temperatura de cualquier punto.'}
-              </p>
-
-              {probeData && (
-                <div className="flex items-center justify-between bg-slate-950/80 p-2 rounded-xl border border-orange-500/30 text-[10px] font-mono mt-1">
-                  <span className="text-slate-300 truncate max-w-[140px]">
-                    📍 {probeData.objectType}
-                  </span>
-                  <span className="font-bold text-orange-400 text-xs">
-                    {probeData.temperature?.toFixed(1)} °C
-                  </span>
-                </div>
-              )}
-            </div>
           </div>
 
-          {/* Perspective Preset Buttons */}
+          {/* ======================================================== */}
+          {/* 2. PERSPECTIVAS DE CÁMARA                                */}
+          {/* ======================================================== */}
           <div className="space-y-1.5">
             <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
               <Eye className="w-3.5 h-3.5 text-orange-400" />
@@ -344,9 +263,9 @@ export default function GlassPanel({
                   <button
                     key={p.id}
                     onClick={() => onSelectPreset(p.id)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                    className={`flex items-center gap-2 p-2.5 rounded-2xl text-xs font-medium transition-all border ${
                       isSelected
-                        ? 'bg-orange-500/25 border border-orange-500/50 text-white shadow-md shadow-orange-500/20'
+                        ? 'bg-orange-500/20 border-orange-500/50 text-white shadow-md shadow-orange-500/10'
                         : 'glass-button text-slate-300 hover:text-white'
                     }`}
                   >
@@ -358,55 +277,8 @@ export default function GlassPanel({
             </div>
           </div>
 
-          {/* Quantitative Thermal Metrics */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-red-400" />
-                Métricas Térmicas LST
-              </label>
-              <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
-                19.0°C – 45.0°C
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div className="p-2.5 rounded-2xl bg-gradient-to-br from-red-950/40 to-slate-900/60 border border-red-500/20 flex flex-col justify-between">
-                <span className="text-[10px] text-red-300/80 font-medium">Temp. Máxima</span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-lg font-bold text-red-400 font-mono">45.0</span>
-                  <span className="text-xs text-red-300 font-semibold">°C</span>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-2xl bg-gradient-to-br from-amber-950/30 to-slate-900/60 border border-amber-500/20 flex flex-col justify-between">
-                <span className="text-[10px] text-amber-300/80 font-medium">Temp. Promedio</span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-lg font-bold text-amber-400 font-mono">31.1</span>
-                  <span className="text-xs text-amber-300 font-semibold">°C</span>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-2xl bg-gradient-to-br from-blue-950/30 to-slate-900/60 border border-blue-500/20 flex flex-col justify-between">
-                <span className="text-[10px] text-blue-300/80 font-medium">Temp. Mínima</span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-lg font-bold text-blue-400 font-mono">19.0</span>
-                  <span className="text-xs text-blue-300 font-semibold">°C</span>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-2xl bg-gradient-to-br from-purple-950/30 to-slate-900/60 border border-purple-500/20 flex flex-col justify-between">
-                <span className="text-[10px] text-purple-300/80 font-medium">Rango Térmico (ΔT)</span>
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-lg font-bold text-purple-400 font-mono">26.0</span>
-                  <span className="text-xs text-purple-300 font-semibold">°C</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* ======================================================== */}
-          {/* HERRAMIENTAS DE EXAGERACIÓN VERTICAL                     */}
+          {/* 3. HERRAMIENTAS DE EXAGERACIÓN VERTICAL                  */}
           {/* ======================================================== */}
           <div className="space-y-3 pt-2 border-t border-white/10">
             
@@ -417,22 +289,23 @@ export default function GlassPanel({
                   <Mountain className="w-3.5 h-3.5 text-blue-400" />
                   Relieve Topográfico (MDE)
                 </label>
-                <span className="text-[10px] font-mono text-blue-400">
+                <span className="text-[10px] font-mono text-cyan-400">
                   {elevationScale.toFixed(1)}x
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-1.5">
+              <div className="grid grid-cols-4 gap-1.5">
                 {[
                   { val: 1.0, label: '1.0x Real' },
-                  { val: 1.5, label: '1.5x Medio' },
-                  { val: 2.0, label: '2.0x Alto' },
+                  { val: 1.5, label: '1.5x' },
+                  { val: 2.5, label: '2.5x' },
+                  { val: 4.0, label: '4.0x' },
                 ].map((item) => (
                   <button
                     key={item.val}
                     onClick={() => onChangeElevationScale(item.val)}
-                    className={`py-1.5 px-2 rounded-lg text-[11px] font-medium transition-all ${
+                    className={`py-1.5 px-1.5 rounded-lg text-[11px] font-medium transition-all text-center ${
                       elevationScale === item.val
-                        ? 'bg-blue-500/25 border border-blue-500/50 text-blue-200 shadow-sm font-semibold'
+                        ? 'bg-blue-500/30 border border-blue-500/60 text-white shadow-sm font-semibold'
                         : 'bg-slate-900/60 hover:bg-slate-800 text-slate-400 border border-white/5'
                     }`}
                   >
@@ -477,7 +350,9 @@ export default function GlassPanel({
 
           </div>
 
-          {/* Interactive Tools & Layer Toggles */}
+          {/* ======================================================== */}
+          {/* 5. HERRAMIENTAS DE EXPLORACIÓN                           */}
+          {/* ======================================================== */}
           <div className="space-y-2 pt-1 border-t border-white/10">
             <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-blue-400" />
@@ -521,157 +396,173 @@ export default function GlassPanel({
             </div>
           </div>
 
-            {/* ======================================================== */}
-            {/* SIMULACIÓN SOLAR Y ANIMACIÓN DE SOMBRAS 3D                */}
-            {/* ======================================================== */}
-            <div className="space-y-2.5 pt-1.5 border-t border-white/10">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+          {/* ======================================================== */}
+          {/* 6. SIMULACIÓN SOLAR Y ANIMACIÓN DE SOMBRAS 3D (BETA)     */}
+          {/*    (Última herramienta, plegada por defecto)             */}
+          {/* ======================================================== */}
+          <div className="pt-2 border-t border-white/10 space-y-2">
+            <button
+              onClick={() => setIsSolarOpen(!isSolarOpen)}
+              className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-slate-900/80 hover:bg-slate-900 border border-white/10 transition-all text-left"
+            >
+              <div className="flex items-center gap-2">
+                <Sun className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-bold text-white">
                   Simulador Solar & Sombras
                 </span>
-                <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/15 px-2 py-0.5 rounded-lg border border-amber-500/30 flex items-center gap-1 shadow-sm">
-                  <Clock className="w-3 h-3 text-amber-400" />
-                  {formatSolarTime(sunTime)}
+                <span className="text-[9px] font-mono font-bold text-amber-400 bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-500/40 uppercase">
+                  Beta
                 </span>
               </div>
-
-              {/* Time Slider (06:00 AM to 08:00 PM in 1-minute steps) */}
-              <div className="space-y-1.5 bg-slate-950/70 p-3 rounded-2xl border border-white/10 shadow-inner">
-                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                  <span>06:00 AM (Amanecer)</span>
-                  <span>08:00 PM (Ocaso)</span>
-                </div>
-
-                <div className="relative flex items-center py-1">
-                  <input
-                    type="range"
-                    min="6.0"
-                    max="20.0"
-                    step="0.016666"
-                    value={sunTime}
-                    onChange={(e) => onChangeSunTime(parseFloat(e.target.value))}
-                    className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 hover:accent-amber-400 focus:outline-none"
-                    title="Desliza para cambiar la hora y los minutos"
-                  />
-                </div>
-
-                {/* Solar Animation Controls: Play/Pause and Speed */}
-                <div className="flex items-center justify-between pt-1 border-t border-white/5">
-                  <button
-                    onClick={onTogglePlayShadows}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all shadow-md ${
-                      isPlayingShadows
-                        ? 'bg-amber-500 text-slate-950 shadow-amber-500/30'
-                        : 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-200 hover:bg-amber-500/30'
-                    }`}
-                  >
-                    {isPlayingShadows ? (
-                      <>
-                        <Pause className="w-3 h-3 fill-current" />
-                        <span>Pausar</span>
-                      </>
-                    ) : (
-                      <>
-                        <Play className="w-3 h-3 fill-current" />
-                        <span>Animar Sombras</span>
-                      </>
-                    )}
-                  </button>
-
-                  {/* Speed Selector */}
-                  <div className="flex items-center gap-1">
-                    <span className="text-[9px] text-slate-400 font-mono pr-0.5">Vel:</span>
-                    {[1, 2, 4].map((spd) => (
-                      <button
-                        key={spd}
-                        onClick={() => onChangeShadowSpeed(spd)}
-                        className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold transition-all ${
-                          shadowSpeed === spd
-                            ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50'
-                            : 'bg-slate-800 text-slate-400 hover:text-slate-200'
-                        }`}
-                      >
-                        {spd}x
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono text-amber-300 hidden sm:inline">
+                  {formatSolarTime(sunTime)}
+                </span>
+                {isSolarOpen ? (
+                  <ChevronDown className="w-4 h-4 text-amber-400" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                )}
               </div>
+            </button>
 
-              {/* Quick Solar Preset Buttons */}
-              <div className="grid grid-cols-2 gap-1.5">
-                {[
-                  { id: 'sunrise', label: 'Amanecer', time: '07:00 AM', icon: Sunrise, color: 'text-amber-300' },
-                  { id: 'landsatReal', label: 'Paso Satélite', time: '11:06 AM', icon: Satellite, color: 'text-cyan-400' },
-                  { id: 'zenith', label: 'Cenital', time: '01:00 PM', icon: Sun, color: 'text-yellow-300' },
-                  { id: 'sunset', label: 'Atardecer', time: '06:45 PM', icon: Sunset, color: 'text-orange-400' },
-                ].map((l) => {
-                  const Icon = l.icon;
-                  const isSelected = lightingPreset === l.id;
-                  return (
+            {isSolarOpen && (
+              <div className="space-y-2.5 p-3 rounded-2xl bg-slate-950/80 border border-amber-500/20 animate-in fade-in duration-200">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-amber-300">
+                  <span className="flex items-center gap-1.5">
+                    <Sun className="w-3.5 h-3.5 text-amber-400" />
+                    Hora Solar Simulada
+                  </span>
+                  <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/15 px-2 py-0.5 rounded-lg border border-amber-500/30 flex items-center gap-1 shadow-sm">
+                    <Clock className="w-3 h-3 text-amber-400" />
+                    {formatSolarTime(sunTime)}
+                  </span>
+                </div>
+
+                {/* Time Slider (06:00 AM to 08:00 PM in 1-minute steps) */}
+                <div className="space-y-1.5 bg-slate-900/60 p-2.5 rounded-xl border border-white/5">
+                  <div className="flex items-center justify-between text-[9px] text-slate-400 font-mono">
+                    <span>06:00 AM (Amanecer)</span>
+                    <span>08:00 PM (Ocaso)</span>
+                  </div>
+
+                  <div className="relative flex items-center py-1">
+                    <input
+                      type="range"
+                      min="6.0"
+                      max="20.0"
+                      step="0.016666"
+                      value={sunTime}
+                      onChange={(e) => onChangeSunTime(parseFloat(e.target.value))}
+                      className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 hover:accent-amber-400 focus:outline-none"
+                      title="Desliza para cambiar la hora solar"
+                    />
+                  </div>
+
+                  {/* Solar Animation Controls: Play/Pause and Speed */}
+                  <div className="flex items-center justify-between pt-1 border-t border-white/5">
                     <button
-                      key={l.id}
-                      onClick={() => onSelectLighting(l.id)}
-                      className={`py-1.5 px-2 rounded-xl text-left transition-all border flex flex-col gap-0.5 ${
-                        isSelected
-                          ? 'bg-gradient-to-r from-amber-500/25 to-orange-500/20 border-amber-500/50 text-white shadow-md shadow-amber-500/10'
-                          : 'bg-slate-900/60 hover:bg-slate-800 text-slate-400 border-white/5'
+                      onClick={onTogglePlayShadows}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all shadow-md ${
+                        isPlayingShadows
+                          ? 'bg-amber-500 text-slate-950 shadow-amber-500/30'
+                          : 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-200 hover:bg-amber-500/30'
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className={`text-[11px] font-semibold flex items-center gap-1.5 ${isSelected ? 'text-white' : 'text-slate-300'}`}>
-                          <Icon className={`w-3.5 h-3.5 ${l.color}`} />
-                          {l.label}
-                        </span>
-                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>}
-                      </div>
-                      <span className="text-[9px] font-mono text-slate-400 pl-5">{l.time}</span>
+                      {isPlayingShadows ? (
+                        <>
+                          <Pause className="w-3 h-3 fill-current" />
+                          <span>Pausar</span>
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-3 h-3 fill-current" />
+                          <span>Animar Sombras</span>
+                        </>
+                      )}
                     </button>
-                  );
-                })}
-              </div>
 
-              {/* Dynamic 3D Shadows System Toggle */}
-              <div className="flex items-center justify-between p-2 rounded-xl bg-slate-950/70 border border-white/10">
-                <div className="flex items-center gap-2">
-                  <div className={`p-1.5 rounded-lg ${enableShadows ? 'bg-amber-500/20 text-amber-300' : 'bg-slate-800 text-slate-500'}`}>
-                    <Sun className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-semibold text-slate-200">Sistema de Sombras 3D</p>
-                    <p className="text-[9px] text-slate-400">Oclusión y relieve de edificios</p>
+                    {/* Speed Selector */}
+                    <div className="flex items-center gap-1">
+                      <span className="text-[9px] text-slate-400 font-mono pr-0.5">Vel:</span>
+                      {[1, 2, 4].map((spd) => (
+                        <button
+                          key={spd}
+                          onClick={() => onChangeShadowSpeed(spd)}
+                          className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold transition-all ${
+                            shadowSpeed === spd
+                              ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50'
+                              : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                          }`}
+                        >
+                          {spd}x
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                <button
-                  onClick={onToggleShadows}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 ${
-                    enableShadows
-                      ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50 shadow-sm'
-                      : 'bg-slate-800 text-slate-500 hover:text-slate-300 border border-white/5'
-                  }`}
-                >
-                  <span className={`w-1.5 h-1.5 rounded-full ${enableShadows ? 'bg-amber-400 animate-pulse' : 'bg-slate-500'}`} />
-                  <span>{enableShadows ? 'ON' : 'OFF'}</span>
-                </button>
-              </div>
-            </div>
+                {/* Quick Solar Preset Buttons */}
+                <div className="grid grid-cols-2 gap-1.5">
+                  {[
+                    { id: 'sunrise', label: 'Amanecer', time: '07:00 AM', icon: Sunrise, color: 'text-amber-300' },
+                    { id: 'landsatReal', label: 'Paso Satélite', time: '11:06 AM', icon: Satellite, color: 'text-cyan-400' },
+                    { id: 'zenith', label: 'Cenital', time: '01:00 PM', icon: Sun, color: 'text-yellow-300' },
+                    { id: 'sunset', label: 'Atardecer', time: '06:45 PM', icon: Sunset, color: 'text-orange-400' },
+                  ].map((l) => {
+                    const Icon = l.icon;
+                    const isSelected = lightingPreset === l.id;
+                    return (
+                      <button
+                        key={l.id}
+                        onClick={() => onSelectLighting(l.id)}
+                        className={`py-1.5 px-2 rounded-xl text-left transition-all border flex flex-col gap-0.5 ${
+                          isSelected
+                            ? 'bg-gradient-to-r from-amber-500/25 to-orange-500/20 border-amber-500/50 text-white shadow-md shadow-amber-500/10'
+                            : 'bg-slate-900/60 hover:bg-slate-800 text-slate-400 border-white/5'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className={`text-[11px] font-semibold flex items-center gap-1.5 ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                            <Icon className={`w-3.5 h-3.5 ${l.color}`} />
+                            {l.label}
+                          </span>
+                          {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>}
+                        </div>
+                        <span className="text-[9px] font-mono text-slate-400 pl-5">{l.time}</span>
+                      </button>
+                    );
+                  })}
+                </div>
 
-          {/* Model Technical Info Footer */}
-          {modelStats && (
-            <div className="text-[10px] font-mono text-slate-400 flex flex-col gap-1 border-t border-white/5 pt-2.5">
-              <div className="flex items-center justify-between">
-                <span>Extensión: {modelStats.realWidthKm} × {modelStats.realDepthKm} km</span>
-                <span className="text-emerald-400/90">ΔZ: {modelStats.elevationDeltaM}m</span>
+                {/* Dynamic 3D Shadows System Toggle */}
+                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-white/5">
+                  <div className="flex items-center gap-2">
+                    <div className={`p-1.5 rounded-lg ${enableShadows ? 'bg-amber-500/20 text-amber-300' : 'bg-slate-800 text-slate-500'}`}>
+                      <Sun className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold text-slate-200">Sistema de Sombras 3D</p>
+                      <p className="text-[9px] text-slate-400">Oclusión y relieve</p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={onToggleShadows}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 ${
+                      enableShadows
+                        ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50 shadow-sm'
+                        : 'bg-slate-800 text-slate-500 hover:text-slate-300 border border-white/5'
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${enableShadows ? 'bg-amber-400 animate-pulse' : 'bg-slate-500'}`} />
+                    <span>{enableShadows ? 'ON' : 'OFF'}</span>
+                  </button>
+                </div>
+
               </div>
-              <div className="flex items-center justify-between text-slate-500 text-[9px]">
-                <span>{modelStats.triangleCount?.toLocaleString()} polígonos</span>
-                <span>{modelStats.meshCount} mallas 3D</span>
-                <span className="text-cyan-400">WebGL 2.0</span>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
 
         </div>
       )}

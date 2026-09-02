@@ -25,8 +25,8 @@ export default function ThermalInspectorCard({ probeData, onClose }) {
   );
 
   return (
-    <div className="fixed bottom-4 right-4 z-30 pointer-events-auto w-[calc(100vw-2rem)] sm:w-80 max-w-sm animate-in fade-in slide-in-from-bottom-3 duration-250">
-      <div className="glass-panel rounded-2xl p-3.5 text-slate-100 border border-white/20 shadow-2xl backdrop-blur-2xl space-y-2.5 relative overflow-hidden">
+    <div className="fixed bottom-4 right-4 z-30 pointer-events-auto w-[calc(100vw-2rem)] sm:w-80 max-w-sm animate-in fade-in slide-in-from-bottom-3 duration-200">
+      <div className="rounded-2xl p-3.5 text-slate-100 bg-slate-950/95 border border-white/20 shadow-2xl space-y-2.5 relative overflow-hidden">
         
         {/* Glow accent */}
         <div
