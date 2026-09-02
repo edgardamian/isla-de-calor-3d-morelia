@@ -1,18 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProgress } from '@react-three/drei';
 import { Layers, Box, Cpu } from 'lucide-react';
 import HeatPersonSilhouette from './HeatPersonSilhouette';
 
-export default function LoadingScreen() {
-  const { active, progress, loaded, total, item } = useProgress();
+export default function LoadingScreen({ isLoaded = false }) {
+  const { active, progress, item } = useProgress();
+  const [shouldRender, setShouldRender] = useState(true);
+  const [opacity, setOpacity] = useState(1);
 
-  if (!active && progress === 100) return null;
-
-  const formattedProgress = Math.min(100, Math.max(0, Math.round(progress)));
+  const formattedProgress = isLoaded
+    ? 100
+    : Math.min(100, Math.max(0, Math.round(progress)));
   const estimatedMB = (45.8 * (formattedProgress / 100)).toFixed(1);
 
+  useEffect(() => {
+    // When model finishes loading or progress hits 100%
+    if (isLoaded || progress === 100 || (!active && progress > 0)) {
+      setOpacity(0);
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoaded, progress, active]);
+
+  // Safety fallback: Never keep user stuck for more than 10 seconds if cache loaded synchronously
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      if (isLoaded || progress >= 90) {
+        setOpacity(0);
+        setTimeout(() => setShouldRender(false), 500);
+      }
+    }, 4000);
+    return () => clearTimeout(safetyTimer);
+  }, [isLoaded, progress]);
+
+  if (!shouldRender) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/95 backdrop-blur-2xl text-slate-100 transition-opacity duration-700">
+    <div
+      style={{
+        opacity,
+        transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        pointerEvents: opacity === 0 ? 'none' : 'auto',
+      }}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950/95 backdrop-blur-2xl text-slate-100"
+    >
       {/* Decorative background glow */}
       <div className="absolute w-96 h-96 bg-orange-600/15 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
       <div className="absolute w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none -bottom-10 right-10"></div>
@@ -90,7 +123,7 @@ export default function LoadingScreen() {
           </div>
 
           <div className="bg-slate-900/60 border border-white/5 rounded-xl p-2.5 flex items-center gap-2">
-            <Flame className="w-4 h-4 text-orange-400 shrink-0" />
+            <HeatPersonSilhouette className="w-4 h-4 shrink-0" animated={false} showSweat={false} />
             <div className="text-[10px] leading-tight">
               <p className="font-semibold text-slate-200">Termografía</p>
               <p className="text-slate-500">LST Superficie</p>

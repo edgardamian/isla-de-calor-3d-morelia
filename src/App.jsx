@@ -28,6 +28,7 @@ export default function App() {
   const [shadowSpeed, setShadowSpeed] = useState(1); // 1x, 2x, 4x
   const [enableShadows, setEnableShadows] = useState(true);
   const [modelStats, setModelStats] = useState(null);
+  const [isModelLoaded, setIsModelLoaded] = useState(false);
 
   // Interactive Thermal Probe state
   const [probeData, setProbeData] = useState(null);
@@ -128,6 +129,7 @@ export default function App() {
 
   const handleModelLoaded = useCallback((stats) => {
     setModelStats(stats);
+    setIsModelLoaded(true);
   }, []);
 
   const handleInspectPoint = useCallback((data) => {
@@ -170,8 +172,8 @@ export default function App() {
         onCameraMove={handleCameraMove}
       />
 
-      {/* Loading Screen using Drei useProgress hook */}
-      <LoadingScreen />
+      {/* Loading Screen using Drei useProgress hook & model state */}
+      <LoadingScreen isLoaded={isModelLoaded} />
 
       {/* Superimposed UI Overlay Layer */}
       <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
