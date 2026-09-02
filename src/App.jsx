@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import SceneCanvas from './components/Viewer3D/SceneCanvas';
 import GlassPanel from './components/UI/GlassPanel';
 import ThermalLegend from './components/UI/ThermalLegend';
-import ThermalInspectorCard from './components/UI/ThermalInspectorCard';
 import ViewControlsHUD from './components/UI/ViewControlsHUD';
 import LoadingScreen from './components/UI/LoadingScreen';
 
@@ -29,9 +28,9 @@ export default function App() {
   const [enableShadows, setEnableShadows] = useState(true);
   const [modelStats, setModelStats] = useState(null);
 
-  // Interactive Thermal Probe state
+  // Interactive Thermal Probe state (inactive by default)
   const [probeData, setProbeData] = useState(null);
-  const [isProbeActive, setIsProbeActive] = useState(true);
+  const [isProbeActive, setIsProbeActive] = useState(false);
 
   // Smooth real-time shadow & solar animation loop
   React.useEffect(() => {
@@ -217,15 +216,7 @@ export default function App() {
         />
 
         {/* Bottom Right Land Surface Temperature Legend */}
-        {mdeTextureMode === 'thermal' && !probeData && <ThermalLegend />}
-
-        {/* Interactive Point Thermal Inspector Card (Bottom Center) */}
-        {probeData && (
-          <ThermalInspectorCard
-            probeData={probeData}
-            onClose={handleCloseProbe}
-          />
-        )}
+        {mdeTextureMode === 'thermal' && <ThermalLegend />}
 
         {/* Top Right HUD Action Controls */}
         <ViewControlsHUD

@@ -62,7 +62,7 @@ export default function CameraController({
       enablePan={true}
       enableRotate={true}
       enableDamping={true}
-      dampingFactor={0.06}
+      dampingFactor={0.08}
       // Required constraint: maxPolarAngle strictly <= Math.PI / 2.1
       maxPolarAngle={Math.PI / 2.1}
       minPolarAngle={0.05}
@@ -70,7 +70,9 @@ export default function CameraController({
       maxDistance={300}
       autoRotate={autoRotate}
       autoRotateSpeed={0.7}
-      zoomSpeed={1.2}
+      zoomSpeed={2.0}
+      rotateSpeed={0.9}
+      panSpeed={1.0}
       onStart={() => {
         isTransitioningRef.current = false;
       }}

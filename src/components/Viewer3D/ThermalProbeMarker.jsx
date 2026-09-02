@@ -69,7 +69,7 @@ export default function ThermalProbeMarker({ probeData, onClose }) {
         zIndexRange={[100, 0]}
       >
         <div className="pointer-events-auto select-none transition-all duration-300 transform -translate-y-2">
-          <div className="glass-panel p-3 rounded-2xl border border-white/20 shadow-2xl backdrop-blur-xl text-white min-w-[210px] space-y-2">
+          <div className="glass-panel p-3.5 rounded-2xl border border-white/20 shadow-2xl backdrop-blur-xl text-white min-w-[220px] max-w-[240px] space-y-2.5">
             
             {/* Header with Close */}
             <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-1.5">
@@ -80,8 +80,8 @@ export default function ThermalProbeMarker({ probeData, onClose }) {
                 >
                   <Thermometer className="w-3 h-3" style={{ color }} />
                 </div>
-                <span className="text-[11px] font-bold tracking-wide">
-                  Sonda Térmica
+                <span className="text-[11px] font-bold tracking-wide text-slate-100">
+                  Identificador Térmico
                 </span>
               </div>
               <button
@@ -90,7 +90,7 @@ export default function ThermalProbeMarker({ probeData, onClose }) {
                   onClose?.();
                 }}
                 className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-                title="Cerrar sonda"
+                title="Cerrar identificador"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -112,6 +112,30 @@ export default function ThermalProbeMarker({ probeData, onClose }) {
               </span>
             </div>
 
+            {/* Compact Thermal Progress Bar */}
+            <div className="space-y-0.5">
+              <div className="flex justify-between text-[8px] font-mono text-slate-400">
+                <span>19°C</span>
+                <span className="text-amber-300">Media 30.2°C</span>
+                <span>43°C</span>
+              </div>
+              <div className="relative h-1.5 w-full bg-slate-800 rounded-full overflow-hidden p-0.5 border border-white/5">
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    background:
+                      'linear-gradient(to right, #0000bf 0%, #00ffff 33%, #ffff00 66%, #bf0000 100%)',
+                  }}
+                />
+                <div
+                  className="absolute top-0 bottom-0 w-1.5 bg-white rounded-full shadow-[0_0_6px_rgba(255,255,255,0.9)] -translate-x-0.5"
+                  style={{
+                    left: `${Math.min(100, Math.max(0, ((temp - 19) / 24) * 100))}%`,
+                  }}
+                />
+              </div>
+            </div>
+
             {/* Metadata (Object type & Altitude) */}
             <div className="text-[10px] font-mono text-slate-300 space-y-1 bg-slate-950/60 p-2 rounded-xl border border-white/5">
               <div className="flex items-center justify-between">
@@ -121,7 +145,7 @@ export default function ThermalProbeMarker({ probeData, onClose }) {
                   ) : (
                     <Mountain className="w-3 h-3 text-blue-400" />
                   )}
-                  Objeto:
+                  Elemento:
                 </span>
                 <span className="font-semibold text-slate-200">
                   {probeData.isBuilding ? 'Edificación' : 'Terreno MDE'}

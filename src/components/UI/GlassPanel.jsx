@@ -285,12 +285,12 @@ export default function GlassPanel({
               )}
             </div>
 
-            {/* 3. Interactive Thermal Probe Tool Switch */}
+            {/* 3. Interactive Thermal Identifier Tool Switch */}
             <div className="pt-2 border-t border-white/10 space-y-1.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-medium text-slate-200 flex items-center gap-1.5">
                   <Thermometer className={`w-3.5 h-3.5 ${isProbeActive ? 'text-orange-400 animate-pulse' : 'text-slate-400'}`} />
-                  Sonda Térmica Interactiva
+                  Identificador Térmico
                 </span>
                 <button
                   onClick={onToggleProbe}
@@ -299,17 +299,17 @@ export default function GlassPanel({
                       ? 'bg-orange-500/25 text-orange-300 border border-orange-500/50'
                       : 'bg-slate-800 text-slate-500 hover:text-slate-300'
                   }`}
-                  title={isProbeActive ? 'Desactivar Sonda' : 'Activar Sonda'}
+                  title={isProbeActive ? 'Desactivar Identificador' : 'Activar Identificador Térmico'}
                 >
                   <span className={`w-1.5 h-1.5 rounded-full ${isProbeActive ? 'bg-orange-400 animate-ping' : 'bg-slate-500'}`} />
-                  <span>{isProbeActive ? 'ACTIVA' : 'OFF'}</span>
+                  <span>{isProbeActive ? 'ACTIVO' : 'OFF'}</span>
                 </button>
               </div>
 
               <p className="text-[10px] text-slate-400 leading-tight">
                 {isProbeActive
-                  ? '👉 Toca o haz clic en cualquier edificio o terreno para medir su temperatura en °C y altitud.'
-                  : 'Sonda desactivada. Actívala para inspeccionar puntos térmicos.'}
+                  ? '👉 Toca o haz clic en cualquier edificio o terreno para identificar su temperatura en °C y altitud.'
+                  : 'Identificador desactivado. Actívalo para consultar la temperatura de cualquier punto.'}
               </p>
 
               {probeData && (

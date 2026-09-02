@@ -130,8 +130,8 @@ export default function SceneEnvironment({
         intensity={solarState.dirIntensity}
         color={solarState.dirColor}
         castShadow={enableShadows}
-        shadow-mapSize-width={4096}
-        shadow-mapSize-height={4096}
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
         shadow-camera-near={1}
         shadow-camera-far={220}
         shadow-camera-left={-26}

@@ -39,7 +39,7 @@ export default function ViewControlsHUD({
       {/* Top Right Floating Toolbar */}
       <div className="fixed top-4 right-4 z-20 pointer-events-auto flex items-center gap-2">
         
-        {/* Interactive Thermal Probe Toggle */}
+        {/* Interactive Thermal Identifier Toggle */}
         <button
           onClick={onToggleProbe}
           className={`p-2.5 rounded-2xl flex items-center gap-1.5 text-xs font-semibold shadow-xl transition-all border ${
@@ -47,10 +47,10 @@ export default function ViewControlsHUD({
               ? 'bg-gradient-to-r from-orange-500/25 to-red-500/25 border-orange-500/50 text-white shadow-orange-500/20'
               : 'glass-button text-slate-400 hover:text-white border-white/15'
           }`}
-          title={isProbeActive ? 'Sonda Térmica Activa (Haz clic en un edificio/terreno)' : 'Activar Sonda Térmica'}
+          title={isProbeActive ? 'Identificador Térmico Activo (Haz clic en un edificio/terreno)' : 'Activar Identificador Térmico'}
         >
           <Thermometer className={`w-4 h-4 ${isProbeActive ? 'text-orange-400 animate-pulse' : 'text-slate-400'}`} />
-          <span className="hidden sm:inline">{isProbeActive ? 'Sonda Activa' : 'Sonda'}</span>
+          <span className="hidden sm:inline">{isProbeActive ? 'Identificador ON' : 'Identificador'}</span>
         </button>
 
         {/* Reset View Quick Button */}
@@ -131,8 +131,8 @@ export default function ViewControlsHUD({
                   <Thermometer className="w-4 h-4 text-orange-400" />
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-200">Sonda Térmica LST</p>
-                  <p className="text-slate-400">Haz clic sobre cualquier edificación o terreno para medir su temperatura en °C y altitud.</p>
+                  <p className="font-semibold text-slate-200">Identificador Térmico LST</p>
+                  <p className="text-slate-400">Haz clic sobre cualquier edificación o terreno para identificar su temperatura en °C y altitud.</p>
                 </div>
               </div>
 
