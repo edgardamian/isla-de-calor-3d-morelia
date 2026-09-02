@@ -70,7 +70,7 @@ export default function LoadingScreen({ isLoaded = false }) {
             Isla de Calor Urbana
           </h2>
           <p className="text-xs text-slate-400">
-            Zona Metropolitana de Morelia • MDE & Morfología
+            Ciudad de Morelia • MDE & Morfología
           </p>
         </div>
 

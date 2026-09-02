@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { sampleThermalIntersection } from '../../utils/thermalSampler';
 
 const MODEL_PATH = `${import.meta.env.BASE_URL}ISLA_DE_CALOR_3D_V5.glb`;
+const DRACO_PATH = `${import.meta.env.BASE_URL}draco/`;
 
 export default function UrbanModel({
   wireframe = false,
@@ -16,7 +17,7 @@ export default function UrbanModel({
   onLoaded,
   onInspectPoint,
 }) {
-  const gltf = useGLTF(MODEL_PATH);
+  const gltf = useGLTF(MODEL_PATH, DRACO_PATH);
 
   // Store original textures
   const originalTexturesRef = useRef(new Map());
@@ -415,4 +416,4 @@ export default function UrbanModel({
   );
 }
 
-useGLTF.preload(MODEL_PATH);
+useGLTF.preload(MODEL_PATH, DRACO_PATH);
