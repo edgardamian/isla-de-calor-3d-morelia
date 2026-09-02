@@ -5,6 +5,7 @@ import ThermalLegend from './components/UI/ThermalLegend';
 import ThermalInspectorCard from './components/UI/ThermalInspectorCard';
 import ViewControlsHUD from './components/UI/ViewControlsHUD';
 import LoadingScreen from './components/UI/LoadingScreen';
+import ErrorBoundary from './components/UI/ErrorBoundary';
 
 export default function App() {
   const [activePreset, setActivePreset] = useState('isometric');
@@ -151,26 +152,28 @@ export default function App() {
     <main className="relative w-screen h-screen overflow-hidden bg-slate-950 select-none">
       
       {/* 3D WebGL Canvas Component (100vw x 100vh) */}
-      <SceneCanvas
-        activePreset={activePreset}
-        resetTrigger={resetTrigger}
-        autoRotate={autoRotate}
-        wireframe={wireframe}
-        elevationScale={elevationScale}
-        buildingHeightScale={buildingHeightScale}
-        showMDE={showMDE}
-        showBuildings={showBuildings}
-        mdeTextureMode={mdeTextureMode}
-        buildingTextureMode={buildingTextureMode}
-        lightingPreset={lightingPreset}
-        sunTime={sunTime}
-        enableShadows={enableShadows}
-        onModelLoaded={handleModelLoaded}
-        probeData={probeData}
-        onInspectPoint={handleInspectPoint}
-        onCloseProbe={handleCloseProbe}
-        onCameraMove={handleCameraMove}
-      />
+      <ErrorBoundary>
+        <SceneCanvas
+          activePreset={activePreset}
+          resetTrigger={resetTrigger}
+          autoRotate={autoRotate}
+          wireframe={wireframe}
+          elevationScale={elevationScale}
+          buildingHeightScale={buildingHeightScale}
+          showMDE={showMDE}
+          showBuildings={showBuildings}
+          mdeTextureMode={mdeTextureMode}
+          buildingTextureMode={buildingTextureMode}
+          lightingPreset={lightingPreset}
+          sunTime={sunTime}
+          enableShadows={enableShadows}
+          onModelLoaded={handleModelLoaded}
+          probeData={probeData}
+          onInspectPoint={handleInspectPoint}
+          onCloseProbe={handleCloseProbe}
+          onCameraMove={handleCameraMove}
+        />
+      </ErrorBoundary>
 
       {/* Loading Screen using Drei useProgress hook & model state */}
       <LoadingScreen isLoaded={isModelLoaded} />

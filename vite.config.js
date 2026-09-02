@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  base: '/isla-de-calor-3d-morelia/',
   server: {
     port: 3000,
     open: false,

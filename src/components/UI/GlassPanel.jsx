@@ -254,9 +254,9 @@ export default function GlassPanel({
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: 'isometric', label: 'Isométrica', icon: Compass },
-                { id: 'topDown', label: 'Cenital / Planta', icon: Grid },
-                { id: 'frontal', label: 'Rasante (Sur)', icon: Building2 },
-                { id: 'lateral', label: 'Perfil (Oriente)', icon: Layers },
+                { id: 'topDown', label: 'Cenital', icon: Grid },
+                { id: 'frontal', label: 'Perfil Sur', icon: Building2 },
+                { id: 'lateral', label: 'Perfil Oriente', icon: Layers },
               ].map((p) => {
                 const Icon = p.icon;
                 const isSelected = activePreset === p.id;
