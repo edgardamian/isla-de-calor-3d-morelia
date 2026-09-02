@@ -115,7 +115,7 @@ export default function GlassPanel({
                   Isla de Calor Urbana
                 </h1>
                 <p className="text-xs font-medium text-orange-300/80">
-                  Morelia, Michoacán
+                  Ciudad de Morelia • Gemelo Digital v1.0.1-2026.09
                 </p>
               </div>
             </div>

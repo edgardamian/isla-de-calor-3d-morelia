@@ -70,7 +70,7 @@ export default function LoadingScreen({ isLoaded = false }) {
             Isla de Calor Urbana
           </h2>
           <p className="text-xs text-slate-400">
-            Ciudad de Morelia • Gemelo Digital V1.01
+            Ciudad de Morelia • Gemelo Digital v1.0.1-2026.09
           </p>
         </div>
 

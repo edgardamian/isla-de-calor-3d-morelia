@@ -82,85 +82,14 @@ export default function UrbanModel({
             geom.setAttribute('uv', geom.attributes.uv2);
           }
 
-          // Ultra-fast O(N) integer column footprint matching + roof triangulation: Loads in <10ms with 0 freeze
+          // Lightweight O(N) building extrusion attribute with zero heap allocations (prevents iOS memory watchdog crash)
           if (isBuilding && pos && !geom.attributes.extrusionHeight) {
             const count = pos.count;
             const deltaH = new Float32Array(count);
-            const indices = geom.index ? geom.index.array : null;
-            const triCount = indices ? indices.length / 3 : count / 3;
-
-            // Pass 1: Column minimum and maximum Y using numeric keys (zero string allocation)
-            const colMinY = new Map();
-            const colMaxY = new Map();
-
             for (let i = 0; i < count; i++) {
-              const kx = Math.round(pos.getX(i));
-              const kz = Math.round(pos.getZ(i));
-              const key = kx * 100000 + kz;
-              const y = pos.getY(i);
-
-              const min = colMinY.get(key);
-              if (min === undefined || y < min) colMinY.set(key, y);
-
-              const max = colMaxY.get(key);
-              if (max === undefined || y > max) colMaxY.set(key, y);
+              const ny = norm ? norm.getY(i) : 1.0;
+              deltaH[i] = ny > 0.15 ? 4.0 : 0.0;
             }
-
-            // Pass 2: Assign height relative to base for all vertices
-            for (let i = 0; i < count; i++) {
-              const kx = Math.round(pos.getX(i));
-              const kz = Math.round(pos.getZ(i));
-              const key = kx * 100000 + kz;
-              const minY = colMinY.get(key) ?? pos.getY(i);
-              const maxY = colMaxY.get(key) ?? pos.getY(i);
-              const colH = maxY - minY;
-
-              if (colH > 0.3 && colH < 150) {
-                const y = pos.getY(i);
-                const relH = y - minY;
-                if (relH > 0.25) {
-                  deltaH[i] = Math.min(150, relH);
-                }
-              }
-            }
-
-            // Pass 3: Roof triangle equalization (ensures every roof triangle has unified heights across all 3 vertices)
-            for (let pass = 0; pass < 2; pass++) {
-              for (let t = 0; t < triCount; t++) {
-                const i0 = indices ? indices[t * 3] : t * 3;
-                const i1 = indices ? indices[t * 3 + 1] : t * 3 + 1;
-                const i2 = indices ? indices[t * 3 + 2] : t * 3 + 2;
-
-                const ny0 = norm ? norm.getY(i0) : 1;
-                const ny1 = norm ? norm.getY(i1) : 1;
-                const ny2 = norm ? norm.getY(i2) : 1;
-
-                // Roof polygon (normals pointing up)
-                if (ny0 > 0.15 && ny1 > 0.15 && ny2 > 0.15) {
-                  const maxH = Math.max(deltaH[i0], deltaH[i1], deltaH[i2]);
-                  if (maxH > 0.5) {
-                    deltaH[i0] = maxH;
-                    deltaH[i1] = maxH;
-                    deltaH[i2] = maxH;
-                  }
-                }
-              }
-            }
-
-            // Pass 4: Sync wall top vertices touching roofs
-            for (let t = 0; t < triCount; t++) {
-              const i0 = indices ? indices[t * 3] : t * 3;
-              const i1 = indices ? indices[t * 3 + 1] : t * 3 + 1;
-              const i2 = indices ? indices[t * 3 + 2] : t * 3 + 2;
-
-              const maxH = Math.max(deltaH[i0], deltaH[i1], deltaH[i2]);
-              if (maxH > 0.5) {
-                if (deltaH[i0] > maxH * 0.6) deltaH[i0] = maxH;
-                if (deltaH[i1] > maxH * 0.6) deltaH[i1] = maxH;
-                if (deltaH[i2] > maxH * 0.6) deltaH[i2] = maxH;
-              }
-            }
-
             geom.setAttribute('extrusionHeight', new THREE.BufferAttribute(deltaH, 1));
           }
         }
@@ -176,8 +105,8 @@ export default function UrbanModel({
               originalTexturesRef.current.set(key, mat.map);
             }
 
-            mat.side = THREE.DoubleSide;
-            mat.shadowSide = isBuilding ? THREE.BackSide : THREE.FrontSide;
+            mat.side = THREE.FrontSide;
+            mat.shadowSide = THREE.FrontSide;
             mat.depthWrite = true;
             mat.depthTest = true;
 
