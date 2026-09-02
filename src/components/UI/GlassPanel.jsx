@@ -82,10 +82,10 @@ export default function GlassPanel({
       {isCollapsed && (
         <button
           onClick={() => setIsCollapsed(false)}
-          className="w-14 h-14 rounded-2xl glass-panel flex items-center justify-center text-orange-400 shadow-2xl hover:scale-105 transition-transform border border-white/20 p-2"
+          className="w-14 h-14 rounded-2xl glass-panel bg-slate-900/90 flex items-center justify-center text-orange-400 shadow-2xl hover:scale-105 transition-transform border border-orange-500/30 p-2"
           title="Expandir Panel Informativo"
         >
-          <HeatPersonSilhouette className="w-9 h-9" animated={true} />
+          <HeatPersonSilhouette className="w-10 h-10" animated={true} />
         </button>
       )}
 
@@ -97,8 +97,8 @@ export default function GlassPanel({
           <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/30 p-1">
-                  <HeatPersonSilhouette className="w-8 h-8" animated={false} />
+                <div className="w-12 h-12 rounded-2xl bg-slate-900/90 border border-orange-500/40 flex items-center justify-center shadow-lg shadow-orange-500/20 p-1">
+                  <HeatPersonSilhouette className="w-10 h-10" animated={false} />
                 </div>
                 <span className="absolute -top-1 -right-1 flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>

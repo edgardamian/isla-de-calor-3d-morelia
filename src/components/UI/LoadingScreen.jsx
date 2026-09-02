@@ -53,10 +53,10 @@ export default function LoadingScreen({ isLoaded = false }) {
 
       <div className="relative z-10 flex flex-col items-center max-w-md w-full px-6 text-center">
         
-        {/* Minimalist Heat Person Icon */}
+        {/* Minimalist 🥵 Face & Morelia Aqueduct Icon */}
         <div className="relative mb-6 flex items-center justify-center">
-          <div className="w-24 h-24 rounded-3xl bg-slate-900/80 border border-orange-500/25 shadow-[0_0_25px_rgba(249,115,22,0.2)] flex items-center justify-center backdrop-blur-md">
-            <HeatPersonSilhouette className="w-14 h-14" animated={true} showSweat={true} />
+          <div className="w-28 h-28 rounded-3xl bg-slate-900/90 border border-orange-500/30 shadow-[0_0_30px_rgba(249,115,22,0.25)] flex items-center justify-center backdrop-blur-md p-2">
+            <HeatPersonSilhouette className="w-20 h-20" animated={true} showSweat={true} />
           </div>
         </div>
 
