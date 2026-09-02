@@ -1,6 +1,7 @@
 import React from 'react';
 import { useProgress } from '@react-three/drei';
-import { Flame, Layers, Box, Cpu } from 'lucide-react';
+import { Layers, Box, Cpu } from 'lucide-react';
+import HeatPersonSilhouette from './HeatPersonSilhouette';
 
 export default function LoadingScreen() {
   const { active, progress, loaded, total, item } = useProgress();
@@ -19,18 +20,21 @@ export default function LoadingScreen() {
 
       <div className="relative z-10 flex flex-col items-center max-w-md w-full px-6 text-center">
         
-        {/* Animated 3D Radar / Spinner Icon */}
-        <div className="relative mb-8 flex items-center justify-center">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-slate-900 via-slate-800 to-slate-900 border border-white/15 shadow-2xl flex items-center justify-center relative overflow-hidden group">
-            {/* Spinning thermal ring */}
-            <div className="absolute inset-0 border-2 border-transparent border-t-orange-500 border-r-red-500 rounded-2xl animate-spin"></div>
+        {/* Animated Heat Person with Flame Silhouette Aura */}
+        <div className="relative mb-6 flex items-center justify-center">
+          {/* Radiant pulsating backdrop */}
+          <div className="absolute w-32 h-32 rounded-full bg-gradient-to-t from-red-600/40 via-orange-500/30 to-amber-400/20 blur-2xl animate-pulse" />
+          
+          <div className="w-28 h-28 rounded-3xl bg-slate-900/80 border border-orange-500/30 shadow-[0_0_30px_rgba(249,115,22,0.3)] flex items-center justify-center relative overflow-hidden backdrop-blur-md">
+            {/* Spinning thermal aura ring */}
+            <div className="absolute inset-0 border-2 border-transparent border-t-orange-400 border-r-red-500 border-b-amber-400 rounded-3xl animate-spin duration-3000"></div>
             
-            {/* Pulsing center icon */}
-            <Flame className="w-10 h-10 text-orange-400 animate-pulse drop-shadow-[0_0_12px_rgba(249,115,22,0.6)]" />
+            {/* Person suffering heat surrounded by flame contour */}
+            <HeatPersonSilhouette className="w-20 h-20" animated={true} showSweat={true} />
           </div>
 
-          {/* Orbiting particle */}
-          <div className="absolute -inset-2 border border-orange-500/20 rounded-3xl animate-ping opacity-30"></div>
+          {/* Radiating heat wave ring */}
+          <div className="absolute -inset-3 border border-orange-500/30 rounded-full animate-ping opacity-25 pointer-events-none"></div>
         </div>
 
         {/* Title */}
