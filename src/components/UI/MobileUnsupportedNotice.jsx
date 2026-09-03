@@ -128,10 +128,10 @@ export default function MobileUnsupportedNotice() {
             </span>
             <button
               onClick={() => setShowFullscreenImage(true)}
-              className="px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/20 text-[10px] text-orange-300 font-semibold flex items-center gap-1 transition-colors"
+              className="px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/20 text-[10px] text-orange-300 font-semibold flex items-center gap-1 transition-colors cursor-pointer"
             >
               <Maximize2 className="w-2.5 h-2.5" />
-              <span>Pantalla completa</span>
+              <span>Ver grande</span>
             </button>
           </div>
 
@@ -149,15 +149,11 @@ export default function MobileUnsupportedNotice() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
             
-            {/* Live Preview Pill Tag */}
-            <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+            {/* Live Preview Pill Tag (moved to bottom right where Ver grande was) */}
+            <div className="absolute bottom-2.5 right-2.5 pointer-events-none">
               <span className="px-2.5 py-1 rounded-xl bg-slate-950/80 border border-white/20 text-white text-[10px] font-medium backdrop-blur-md flex items-center gap-1.5 shadow-lg">
                 <Monitor className="w-3 h-3 text-orange-400" />
                 Vista previa real en PC / Laptop
-              </span>
-              <span className="px-2 py-0.5 rounded-lg bg-orange-500/80 text-white font-bold text-[9px] uppercase tracking-wider flex items-center gap-1">
-                <Maximize2 className="w-2.5 h-2.5" />
-                Ver grande
               </span>
             </div>
           </div>
@@ -263,12 +259,12 @@ export default function MobileUnsupportedNotice() {
 
       {/* Footer with user credentials & identity logo */}
       <footer className="relative z-10 pt-3 border-t border-white/10 max-w-lg mx-auto w-full">
-        <div className="flex items-center justify-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-slate-900/90 border border-orange-500/40 flex items-center justify-center shadow-md p-1 shrink-0">
-            <HeatPersonSilhouette className="w-7 h-7" animated={true} showSweat={true} />
+        <div className="flex items-center justify-center gap-3.5">
+          <div className="w-14 h-14 rounded-2xl bg-slate-900/90 border border-orange-500/40 flex items-center justify-center shadow-lg shadow-orange-500/20 p-1.5 shrink-0">
+            <HeatPersonSilhouette className="w-11 h-11" animated={true} showSweat={true} />
           </div>
           <div className="text-left space-y-0.5">
-            <p className="text-xs font-bold text-slate-200 leading-tight">
+            <p className="text-sm font-bold text-slate-100 leading-tight">
               Edgar Mora D.
             </p>
             <div className="flex items-center gap-2.5 text-[11px] text-slate-400">
