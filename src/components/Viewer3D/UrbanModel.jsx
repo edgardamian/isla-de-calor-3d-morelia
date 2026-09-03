@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useRef, useCallback } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { sampleThermalIntersection } from '../../utils/thermalSampler';
+import { getIsMobile } from '../../utils/deviceDetection';
 import ReferencePointsLayer from './ReferencePointsLayer';
 import AffectedAreasLayer from './AffectedAreasLayer';
 
@@ -56,6 +57,8 @@ export default function UrbanModel({
       buildings: [],
     };
 
+    const isMobile = getIsMobile();
+
     scene.traverse((child) => {
       const isBuilding =
         child.name?.toLowerCase().includes('edificio') ||
@@ -65,7 +68,8 @@ export default function UrbanModel({
         meshCount++;
 
         if (isBuilding) {
-          child.castShadow = true;
+          // On mobile: disable castShadow on 10.25M building vertices to avoid doubling vertex passes and VRAM crash
+          child.castShadow = !isMobile;
           child.receiveShadow = true;
           foundMeshRefs.buildings.push(child);
         } else {
@@ -96,82 +100,92 @@ export default function UrbanModel({
           if (isBuilding && pos && !geom.attributes.extrusionHeight) {
             const count = pos.count;
             const deltaH = new Float32Array(count);
-            const indices = geom.index ? geom.index.array : null;
-            const triCount = indices ? indices.length / 3 : count / 3;
 
-            // Pass 1: Column minimum and maximum Y using numeric integer keys
-            const colMinY = new Map();
-            const colMaxY = new Map();
+            if (isMobile) {
+              // Mobile profile: Fast O(N) zero-heap single pass without Maps to prevent iOS Jetsam / Android OOM crashes
+              for (let i = 0; i < count; i++) {
+                const ny = norm ? norm.getY(i) : 1.0;
+                deltaH[i] = ny > 0.15 ? 4.0 : 0.0;
+              }
+            } else {
+              // Desktop profile: Full 4-pass polygon extrusion and roof equalization
+              const indices = geom.index ? geom.index.array : null;
+              const triCount = indices ? indices.length / 3 : count / 3;
 
-            for (let i = 0; i < count; i++) {
-              const kx = Math.round(pos.getX(i));
-              const kz = Math.round(pos.getZ(i));
-              const key = kx * 100000 + kz;
-              const y = pos.getY(i);
+              // Pass 1: Column minimum and maximum Y using numeric integer keys
+              const colMinY = new Map();
+              const colMaxY = new Map();
 
-              const min = colMinY.get(key);
-              if (min === undefined || y < min) colMinY.set(key, y);
-
-              const max = colMaxY.get(key);
-              if (max === undefined || y > max) colMaxY.set(key, y);
-            }
-
-            // Pass 2: Assign relative height to all vertices
-            for (let i = 0; i < count; i++) {
-              const kx = Math.round(pos.getX(i));
-              const kz = Math.round(pos.getZ(i));
-              const key = kx * 100000 + kz;
-              const minY = colMinY.get(key) ?? pos.getY(i);
-              const maxY = colMaxY.get(key) ?? pos.getY(i);
-              const colH = maxY - minY;
-
-              if (colH > 0.3 && colH < 150) {
+              for (let i = 0; i < count; i++) {
+                const kx = Math.round(pos.getX(i));
+                const kz = Math.round(pos.getZ(i));
+                const key = kx * 100000 + kz;
                 const y = pos.getY(i);
-                const relH = y - minY;
-                if (relH > 0.25) {
-                  deltaH[i] = Math.min(150, relH);
+
+                const min = colMinY.get(key);
+                if (min === undefined || y < min) colMinY.set(key, y);
+
+                const max = colMaxY.get(key);
+                if (max === undefined || y > max) colMaxY.set(key, y);
+              }
+
+              // Pass 2: Assign relative height to all vertices
+              for (let i = 0; i < count; i++) {
+                const kx = Math.round(pos.getX(i));
+                const kz = Math.round(pos.getZ(i));
+                const key = kx * 100000 + kz;
+                const minY = colMinY.get(key) ?? pos.getY(i);
+                const maxY = colMaxY.get(key) ?? pos.getY(i);
+                const colH = maxY - minY;
+
+                if (colH > 0.3 && colH < 150) {
+                  const y = pos.getY(i);
+                  const relH = y - minY;
+                  if (relH > 0.25) {
+                    deltaH[i] = Math.min(150, relH);
+                  }
                 }
               }
-            }
 
-            // Explicitly clear maps to free memory immediately
-            colMinY.clear();
-            colMaxY.clear();
+              // Explicitly clear maps to free memory immediately
+              colMinY.clear();
+              colMaxY.clear();
 
-            // Pass 3: Roof polygon equalization (ensures all 3 vertices of every roof triangle move together)
-            for (let pass = 0; pass < 2; pass++) {
+              // Pass 3: Roof polygon equalization (ensures all 3 vertices of every roof triangle move together)
+              for (let pass = 0; pass < 2; pass++) {
+                for (let t = 0; t < triCount; t++) {
+                  const i0 = indices ? indices[t * 3] : t * 3;
+                  const i1 = indices ? indices[t * 3 + 1] : t * 3 + 1;
+                  const i2 = indices ? indices[t * 3 + 2] : t * 3 + 2;
+
+                  const ny0 = norm ? norm.getY(i0) : 1;
+                  const ny1 = norm ? norm.getY(i1) : 1;
+                  const ny2 = norm ? norm.getY(i2) : 1;
+
+                  // Roof polygon (normals pointing up)
+                  if (ny0 > 0.15 && ny1 > 0.15 && ny2 > 0.15) {
+                    const maxH = Math.max(deltaH[i0], deltaH[i1], deltaH[i2]);
+                    if (maxH > 0.5) {
+                      deltaH[i0] = maxH;
+                      deltaH[i1] = maxH;
+                      deltaH[i2] = maxH;
+                    }
+                  }
+                }
+              }
+
+              // Pass 4: Synchronize wall top vertices touching roofs so walls stretch seamlessly to roof level
               for (let t = 0; t < triCount; t++) {
                 const i0 = indices ? indices[t * 3] : t * 3;
                 const i1 = indices ? indices[t * 3 + 1] : t * 3 + 1;
                 const i2 = indices ? indices[t * 3 + 2] : t * 3 + 2;
 
-                const ny0 = norm ? norm.getY(i0) : 1;
-                const ny1 = norm ? norm.getY(i1) : 1;
-                const ny2 = norm ? norm.getY(i2) : 1;
-
-                // Roof polygon (normals pointing up)
-                if (ny0 > 0.15 && ny1 > 0.15 && ny2 > 0.15) {
-                  const maxH = Math.max(deltaH[i0], deltaH[i1], deltaH[i2]);
-                  if (maxH > 0.5) {
-                    deltaH[i0] = maxH;
-                    deltaH[i1] = maxH;
-                    deltaH[i2] = maxH;
-                  }
+                const maxH = Math.max(deltaH[i0], deltaH[i1], deltaH[i2]);
+                if (maxH > 0.5) {
+                  if (deltaH[i0] > maxH * 0.6) deltaH[i0] = maxH;
+                  if (deltaH[i1] > maxH * 0.6) deltaH[i1] = maxH;
+                  if (deltaH[i2] > maxH * 0.6) deltaH[i2] = maxH;
                 }
-              }
-            }
-
-            // Pass 4: Synchronize wall top vertices touching roofs so walls stretch seamlessly to roof level
-            for (let t = 0; t < triCount; t++) {
-              const i0 = indices ? indices[t * 3] : t * 3;
-              const i1 = indices ? indices[t * 3 + 1] : t * 3 + 1;
-              const i2 = indices ? indices[t * 3 + 2] : t * 3 + 2;
-
-              const maxH = Math.max(deltaH[i0], deltaH[i1], deltaH[i2]);
-              if (maxH > 0.5) {
-                if (deltaH[i0] > maxH * 0.6) deltaH[i0] = maxH;
-                if (deltaH[i1] > maxH * 0.6) deltaH[i1] = maxH;
-                if (deltaH[i2] > maxH * 0.6) deltaH[i2] = maxH;
               }
             }
 
@@ -190,7 +204,8 @@ export default function UrbanModel({
               originalTexturesRef.current.set(key, mat.map);
             }
 
-            mat.side = THREE.DoubleSide;
+            // On mobile: enable backface culling on buildings (FrontSide) to reduce fragment shading by 50%
+            mat.side = isBuilding && isMobile ? THREE.FrontSide : THREE.DoubleSide;
             mat.shadowSide = isBuilding ? THREE.BackSide : THREE.FrontSide;
             mat.depthWrite = true;
             mat.depthTest = true;

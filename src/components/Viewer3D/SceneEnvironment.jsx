@@ -1,5 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { getIsMobile } from '../../utils/deviceDetection';
 
 export default function SceneEnvironment({
   sunTime = 7.0, // Decimal hours (e.g. 7.0 = 07:00 AM)
@@ -113,12 +114,13 @@ export default function SceneEnvironment({
     };
   }, [sunTime]);
 
+  const isMobile = getIsMobile();
+
   return (
     <>
       <color attach="background" args={[solarState.skyColor]} />
       <fog attach="fog" args={[solarState.skyColor, 150, 480]} />
-
-      <ambientLight intensity={solarState.ambientIntensity} />
+      <ambientLight intensity={isMobile ? 0.35 : solarState.ambientIntensity} />
 
       {/* Target object at city center */}
       <primitive object={targetObjectRef.current} position={[0, 0, 0]} />
@@ -129,17 +131,9 @@ export default function SceneEnvironment({
         target={targetObjectRef.current}
         intensity={solarState.dirIntensity}
         color={solarState.dirColor}
-        castShadow={enableShadows}
-        shadow-mapSize-width={
-          typeof window !== 'undefined' && (window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
-            ? 1024
-            : 2048
-        }
-        shadow-mapSize-height={
-          typeof window !== 'undefined' && (window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
-            ? 1024
-            : 2048
-        }
+        castShadow={enableShadows && !isMobile}
+        shadow-mapSize-width={isMobile ? 512 : 2048}
+        shadow-mapSize-height={isMobile ? 512 : 2048}
         shadow-camera-near={1}
         shadow-camera-far={220}
         shadow-camera-left={-26}
@@ -162,7 +156,7 @@ export default function SceneEnvironment({
       <hemisphereLight
         skyColor={solarState.fillColor}
         groundColor="#0f172a"
-        intensity={0.06}
+        intensity={isMobile ? 0.22 : 0.06}
       />
     </>
   );
