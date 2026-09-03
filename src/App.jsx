@@ -8,8 +8,17 @@ import ReferencePointCard from './components/UI/ReferencePointCard';
 import ViewControlsHUD from './components/UI/ViewControlsHUD';
 import LoadingScreen from './components/UI/LoadingScreen';
 import ErrorBoundary from './components/UI/ErrorBoundary';
+import MobileUnsupportedNotice from './components/UI/MobileUnsupportedNotice';
+import { getIsMobile } from './utils/deviceDetection';
 
 export default function App() {
+  const isMobile = getIsMobile();
+
+  // On mobile devices, show polite desktop-requirement notice and sharing actions without mounting heavy WebGL
+  if (isMobile) {
+    return <MobileUnsupportedNotice />;
+  }
+
   const [activePreset, setActivePreset] = useState('isometric');
   const [resetTrigger, setResetTrigger] = useState(0);
   const [autoRotate, setAutoRotate] = useState(false);

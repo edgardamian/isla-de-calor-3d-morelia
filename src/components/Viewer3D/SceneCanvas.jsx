@@ -6,7 +6,6 @@ import CameraController from './CameraController';
 import SceneEnvironment from './SceneEnvironment';
 import ThermalProbeMarker from './ThermalProbeMarker';
 import { sampleThermalIntersection } from '../../utils/thermalSampler';
-import { getIsMobile } from '../../utils/deviceDetection';
 
 /**
  * High-performance One-Shot Right-Click Raycaster.
@@ -83,8 +82,6 @@ export default function SceneCanvas({
   activePoint,
   activeArea,
 }) {
-  const isMobile = getIsMobile();
-
   return (
     <div
       className="absolute inset-0 w-full h-full bg-slate-950 overflow-hidden"
@@ -92,7 +89,7 @@ export default function SceneCanvas({
     >
       <Canvas
         onContextMenu={(e) => e.preventDefault()}
-        shadows={enableShadows && !isMobile ? { type: THREE.PCFSoftShadowMap } : false}
+        shadows={enableShadows ? { type: THREE.PCFSoftShadowMap } : false}
         camera={{
           position: [42, 36, 42],
           fov: 45,
@@ -100,14 +97,14 @@ export default function SceneCanvas({
           far: 1000,
         }}
         gl={{
-          antialias: !isMobile,
+          antialias: true,
           alpha: false,
-          powerPreference: isMobile ? 'high-performance' : 'default',
+          powerPreference: 'default',
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.2,
           preserveDrawingBuffer: false,
         }}
-        dpr={isMobile ? 1 : [1, 1.5]}
+        dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? [1, 1.2] : [1, 1.5]}
         onCreated={({ gl }) => {
           gl.domElement.addEventListener(
             'webglcontextlost',
