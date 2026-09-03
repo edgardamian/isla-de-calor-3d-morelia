@@ -8,12 +8,18 @@ import {
   MessageCircle,
   Layers,
   Sun,
-  MousePointer,
+  Maximize2,
+  X,
   Sparkles,
+  AlertTriangle,
+  Mail,
 } from 'lucide-react';
+import HeatIslandConceptModal from './HeatIslandConceptModal';
 
 export default function MobileUnsupportedNotice() {
   const [copied, setCopied] = useState(false);
+  const [showFullscreenImage, setShowFullscreenImage] = useState(false);
+  const [showConceptModal, setShowConceptModal] = useState(false);
 
   const previewImg = `${import.meta.env.BASE_URL}img/imagen_escritorio.png`;
   const pageUrl = typeof window !== 'undefined' ? window.location.href : 'https://github.com/edgardamian/isla-de-calor-3d-morelia';
@@ -79,7 +85,7 @@ export default function MobileUnsupportedNotice() {
       </header>
 
       {/* Main Notice Card */}
-      <main className="relative z-10 my-4 max-w-lg mx-auto w-full space-y-4 text-center">
+      <main className="relative z-10 my-3 max-w-lg mx-auto w-full space-y-3.5 text-center">
         {/* Title and explanation */}
         <div className="space-y-1.5 pt-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-300 text-[11px] font-semibold mb-1">
@@ -94,6 +100,17 @@ export default function MobileUnsupportedNotice() {
           </p>
         </div>
 
+        {/* Button: ¿Qué es una Isla de Calor? */}
+        <div>
+          <button
+            onClick={() => setShowConceptModal(true)}
+            className="w-full py-2.5 px-3.5 rounded-2xl bg-gradient-to-r from-orange-500/20 via-red-500/20 to-orange-500/20 hover:from-orange-500/30 hover:to-red-500/30 border border-orange-500/40 text-orange-200 font-semibold text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98] cursor-pointer"
+          >
+            <Flame className="w-4 h-4 text-orange-400 animate-pulse" />
+            <span>¿Qué es una Isla de Calor?</span>
+          </button>
+        </div>
+
         {/* Desktop Screenshot Preview Window Frame */}
         <div className="relative rounded-2xl overflow-hidden border border-white/20 bg-slate-900/90 shadow-2xl backdrop-blur-xl group">
           {/* Mock Browser/Window Title Bar */}
@@ -103,16 +120,24 @@ export default function MobileUnsupportedNotice() {
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
             </div>
-            <span className="font-mono text-[10px] text-slate-400 truncate max-w-[200px]">
+            <span className="font-mono text-[10px] text-slate-400 truncate max-w-[180px]">
               isla-de-calor-3d-morelia (PC)
             </span>
-            <span className="text-[10px] text-orange-400 font-semibold">
-              3D en vivo
-            </span>
+            <button
+              onClick={() => setShowFullscreenImage(true)}
+              className="px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/20 text-[10px] text-orange-300 font-semibold flex items-center gap-1 transition-colors"
+            >
+              <Maximize2 className="w-2.5 h-2.5" />
+              <span>Pantalla completa</span>
+            </button>
           </div>
 
-          {/* Actual Desktop Capture Image */}
-          <div className="relative aspect-[16/9] w-full bg-slate-950 overflow-hidden">
+          {/* Actual Desktop Capture Image with click to fullscreen */}
+          <div
+            className="relative aspect-[16/9] w-full bg-slate-950 overflow-hidden cursor-pointer"
+            onClick={() => setShowFullscreenImage(true)}
+            title="Toca para ver en pantalla completa"
+          >
             <img
               src={previewImg}
               alt="Captura real de la aplicación en computadora de escritorio"
@@ -127,14 +152,15 @@ export default function MobileUnsupportedNotice() {
                 <Monitor className="w-3 h-3 text-orange-400" />
                 Vista previa real en PC / Laptop
               </span>
-              <span className="px-2 py-0.5 rounded-lg bg-orange-500/80 text-white font-bold text-[9px] uppercase tracking-wider">
-                Full 3D
+              <span className="px-2 py-0.5 rounded-lg bg-orange-500/80 text-white font-bold text-[9px] uppercase tracking-wider flex items-center gap-1">
+                <Maximize2 className="w-2.5 h-2.5" />
+                Ver grande
               </span>
             </div>
           </div>
         </div>
 
-        {/* Feature Highlights */}
+        {/* Feature Highlights with user specified labels */}
         <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-3 text-left grid grid-cols-2 gap-2 text-[11px] text-slate-300 shadow-inner">
           <div className="flex items-center gap-2">
             <Layers className="w-3.5 h-3.5 text-orange-400 shrink-0" />
@@ -142,15 +168,15 @@ export default function MobileUnsupportedNotice() {
           </div>
           <div className="flex items-center gap-2">
             <Flame className="w-3.5 h-3.5 text-red-400 shrink-0" />
-            <span className="truncate">Diagnóstico Landsat</span>
+            <span className="truncate">Temperatura superficial</span>
           </div>
           <div className="flex items-center gap-2">
             <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <span className="truncate">Ciclo solar dinámico</span>
           </div>
           <div className="flex items-center gap-2">
-            <MousePointer className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-            <span className="truncate">Termómetro clic derecho</span>
+            <AlertTriangle className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+            <span className="truncate">Áreas afectadas representativas</span>
           </div>
         </div>
 
@@ -197,14 +223,57 @@ export default function MobileUnsupportedNotice() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 pt-3 border-t border-white/10 text-center max-w-lg mx-auto w-full">
-        <p className="text-[10px] text-slate-500 leading-tight">
-          Instituto Municipal de Planeación de Morelia (IMPLAN)
+      {/* Fullscreen Screenshot Modal */}
+      {showFullscreenImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex flex-col p-3 backdrop-blur-md animate-in fade-in duration-200 pointer-events-auto select-none"
+          onClick={() => setShowFullscreenImage(false)}
+        >
+          <div className="flex items-center justify-between p-2 text-white border-b border-white/15">
+            <span className="text-xs font-semibold flex items-center gap-1.5">
+              <Monitor className="w-3.5 h-3.5 text-orange-400" />
+              Captura Real • Versión de Escritorio (PC / Laptop)
+            </span>
+            <button
+              onClick={() => setShowFullscreenImage(false)}
+              className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="flex-1 flex items-center justify-center p-2 overflow-auto">
+            <img
+              src={previewImg}
+              alt="Captura de pantalla de la versión de escritorio en pantalla completa"
+              className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Heat Island Concept Scientific Modal */}
+      <HeatIslandConceptModal
+        isOpen={showConceptModal}
+        onClose={() => setShowConceptModal(false)}
+      />
+
+      {/* Footer with user credentials */}
+      <footer className="relative z-10 pt-3 border-t border-white/10 text-center max-w-lg mx-auto w-full space-y-1">
+        <p className="text-xs font-semibold text-slate-200">
+          Edgar Mora D.
         </p>
-        <p className="text-[9px] text-slate-600">
-          Laboratorio de Información Geográfica y Análisis Espacial
-        </p>
+        <div className="flex items-center justify-center gap-3 text-[11px] text-slate-400">
+          <a
+            href="mailto:edgar.mora.d@gmail.com"
+            className="hover:text-orange-400 transition-colors underline underline-offset-2 flex items-center gap-1"
+          >
+            <Mail className="w-3 h-3 text-orange-400" />
+            edgar.mora.d@gmail.com
+          </a>
+          <span>•</span>
+          <span className="text-slate-300 font-medium">@edgar_rllr</span>
+        </div>
       </footer>
     </div>
   );

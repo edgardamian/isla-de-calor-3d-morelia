@@ -14,6 +14,8 @@ import {
   Flame,
 } from 'lucide-react';
 
+import HeatIslandConceptModal from './HeatIslandConceptModal';
+
 export default function ViewControlsHUD({
   onResetView,
   isProbeActive = true,
@@ -27,6 +29,7 @@ export default function ViewControlsHUD({
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showConcept, setShowConcept] = useState(false);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -109,6 +112,17 @@ export default function ViewControlsHUD({
           ) : (
             <Maximize2 className="w-4 h-4" />
           )}
+        </button>
+
+        {/* Concept Button: ¿Qué es una Isla de Calor? */}
+        <button
+          onClick={() => setShowConcept(true)}
+          className="px-3 py-2 rounded-2xl flex items-center gap-1.5 text-xs font-semibold shadow-xl border transition-all bg-gradient-to-r from-orange-600/30 via-red-600/30 to-orange-600/30 hover:from-orange-600/45 hover:to-red-600/45 border-orange-500/50 text-orange-200 hover:text-white backdrop-blur-md"
+          title="¿Qué es una Isla de Calor Urbana? (Definición oficial y factores)"
+        >
+          <Flame className="w-3.5 h-3.5 text-orange-400 animate-pulse" />
+          <span className="hidden lg:inline">¿Qué es una Isla de Calor?</span>
+          <span className="lg:hidden">¿Qué es ICU?</span>
         </button>
 
         {/* Help & Navigation Modal Trigger */}
@@ -213,6 +227,12 @@ export default function ViewControlsHUD({
           </div>
         </div>
       )}
+
+      {/* Heat Island Concept Scientific Modal */}
+      <HeatIslandConceptModal
+        isOpen={showConcept}
+        onClose={() => setShowConcept(false)}
+      />
     </>
   );
 }
