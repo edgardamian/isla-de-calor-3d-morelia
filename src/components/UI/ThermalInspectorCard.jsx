@@ -5,7 +5,6 @@ import {
   Mountain,
   X,
   Compass,
-  Info,
 } from 'lucide-react';
 
 export default function ThermalInspectorCard({ probeData, onClose }) {
@@ -141,12 +140,6 @@ export default function ThermalInspectorCard({ probeData, onClose }) {
               </span>
             </div>
           </div>
-        </div>
-
-        {/* Concise Description */}
-        <div className="flex items-start gap-1.5 text-[9px] text-slate-300/90 leading-tight bg-slate-900/50 p-1.5 rounded-xl border border-white/5">
-          <Info className="w-3 h-3 text-orange-400 shrink-0 mt-0.5" />
-          <p>{classification.description}</p>
         </div>
 
       </div>
