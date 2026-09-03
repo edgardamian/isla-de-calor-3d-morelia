@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useRef, useCallback } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { sampleThermalIntersection } from '../../utils/thermalSampler';
+import { getIsMobile } from '../../utils/deviceDetection';
 import ReferencePointsLayer from './ReferencePointsLayer';
 import AffectedAreasLayer from './AffectedAreasLayer';
 
@@ -467,4 +468,7 @@ export default function UrbanModel({
   );
 }
 
-useGLTF.preload(MODEL_PATH, DRACO_PATH);
+// Only preload 3D assets on desktop browsers; prevents memory exhaustion on mobile
+if (!getIsMobile()) {
+  useGLTF.preload(MODEL_PATH, DRACO_PATH);
+}

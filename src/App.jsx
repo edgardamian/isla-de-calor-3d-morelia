@@ -1,5 +1,4 @@
-import React, { useState, useCallback } from 'react';
-import SceneCanvas from './components/Viewer3D/SceneCanvas';
+import React, { useState, useCallback, Suspense, lazy } from 'react';
 import GlassPanel from './components/UI/GlassPanel';
 import ThermalLegend from './components/UI/ThermalLegend';
 import ThermalInspectorCard from './components/UI/ThermalInspectorCard';
@@ -10,6 +9,9 @@ import LoadingScreen from './components/UI/LoadingScreen';
 import ErrorBoundary from './components/UI/ErrorBoundary';
 import MobileUnsupportedNotice from './components/UI/MobileUnsupportedNotice';
 import { getIsMobile } from './utils/deviceDetection';
+
+// Dynamic import: Only downloaded and executed on desktop computers
+const SceneCanvas = lazy(() => import('./components/Viewer3D/SceneCanvas'));
 
 export default function App() {
   const isMobile = getIsMobile();
@@ -223,33 +225,35 @@ export default function App() {
       
       {/* 3D WebGL Canvas Component (100vw x 100vh) */}
       <ErrorBoundary>
-        <SceneCanvas
-          activePreset={activePreset}
-          resetTrigger={resetTrigger}
-          autoRotate={autoRotate}
-          wireframe={wireframe}
-          elevationScale={elevationScale}
-          buildingHeightScale={buildingHeightScale}
-          showMDE={showMDE}
-          showBuildings={showBuildings}
-          mdeTextureMode={mdeTextureMode}
-          buildingTextureMode={buildingTextureMode}
-          showReferencePoints={showReferencePoints}
-          showAffectedAreas={showAffectedAreas}
-          lightingPreset={lightingPreset}
-          sunTime={sunTime}
-          enableShadows={enableShadows}
-          onModelLoaded={handleModelLoaded}
-          probeData={probeData}
-          onInspectPoint={handleInspectPoint}
-          onCloseProbe={handleCloseProbe}
-          onCameraMove={handleCameraMove}
-          focusTarget={focusTarget}
-          onSelectPoint={handleSelectPoint}
-          onSelectArea={handleSelectArea}
-          activePoint={activePoint}
-          activeArea={activeArea}
-        />
+        <Suspense fallback={null}>
+          <SceneCanvas
+            activePreset={activePreset}
+            resetTrigger={resetTrigger}
+            autoRotate={autoRotate}
+            wireframe={wireframe}
+            elevationScale={elevationScale}
+            buildingHeightScale={buildingHeightScale}
+            showMDE={showMDE}
+            showBuildings={showBuildings}
+            mdeTextureMode={mdeTextureMode}
+            buildingTextureMode={buildingTextureMode}
+            showReferencePoints={showReferencePoints}
+            showAffectedAreas={showAffectedAreas}
+            lightingPreset={lightingPreset}
+            sunTime={sunTime}
+            enableShadows={enableShadows}
+            onModelLoaded={handleModelLoaded}
+            probeData={probeData}
+            onInspectPoint={handleInspectPoint}
+            onCloseProbe={handleCloseProbe}
+            onCameraMove={handleCameraMove}
+            focusTarget={focusTarget}
+            onSelectPoint={handleSelectPoint}
+            onSelectArea={handleSelectArea}
+            activePoint={activePoint}
+            activeArea={activeArea}
+          />
+        </Suspense>
       </ErrorBoundary>
 
       {/* Loading Screen using Drei useProgress hook & model state */}
