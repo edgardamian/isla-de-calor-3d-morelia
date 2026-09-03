@@ -93,19 +93,8 @@ export default function MobileUnsupportedNotice() {
 
       {/* Main Notice Card */}
       <main className="relative z-10 my-3 max-w-lg mx-auto w-full space-y-3.5 text-center">
-        {/* Minimalist 🥵 Face & Morelia Aqueduct Identity Icon */}
-        <div className="relative flex items-center justify-center pt-1 pb-0.5">
-          <div className="w-24 h-24 rounded-3xl bg-slate-900/90 border border-orange-500/35 shadow-[0_0_35px_rgba(249,115,22,0.3)] flex items-center justify-center backdrop-blur-md p-2">
-            <HeatPersonSilhouette className="w-16 h-16" animated={true} showSweat={true} />
-          </div>
-        </div>
-
         {/* Title and explanation */}
-        <div className="space-y-1.5 pt-0.5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-300 text-[11px] font-semibold mb-1">
-            <Sparkles className="w-3 h-3 text-sky-400" />
-            Experiencia de Alta Resolución
-          </div>
+        <div className="space-y-1.5 pt-1">
           <h2 className="text-xl font-extrabold text-white tracking-tight">
             Disponible para Computadoras
           </h2>
@@ -272,21 +261,28 @@ export default function MobileUnsupportedNotice() {
         onClose={() => setShowConceptModal(false)}
       />
 
-      {/* Footer with user credentials */}
-      <footer className="relative z-10 pt-3 border-t border-white/10 text-center max-w-lg mx-auto w-full space-y-1">
-        <p className="text-xs font-semibold text-slate-200">
-          Edgar Mora D.
-        </p>
-        <div className="flex items-center justify-center gap-3 text-[11px] text-slate-400">
-          <a
-            href="mailto:edgar.mora.d@gmail.com"
-            className="hover:text-orange-400 transition-colors underline underline-offset-2 flex items-center gap-1"
-          >
-            <Mail className="w-3 h-3 text-orange-400" />
-            edgar.mora.d@gmail.com
-          </a>
-          <span>•</span>
-          <span className="text-slate-300 font-medium">@edgar_rllr</span>
+      {/* Footer with user credentials & identity logo */}
+      <footer className="relative z-10 pt-3 border-t border-white/10 max-w-lg mx-auto w-full">
+        <div className="flex items-center justify-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-slate-900/90 border border-orange-500/40 flex items-center justify-center shadow-md p-1 shrink-0">
+            <HeatPersonSilhouette className="w-7 h-7" animated={true} showSweat={true} />
+          </div>
+          <div className="text-left space-y-0.5">
+            <p className="text-xs font-bold text-slate-200 leading-tight">
+              Edgar Mora D.
+            </p>
+            <div className="flex items-center gap-2.5 text-[11px] text-slate-400">
+              <a
+                href="mailto:edgar.mora.d@gmail.com"
+                className="hover:text-orange-400 transition-colors underline underline-offset-2 flex items-center gap-1"
+              >
+                <Mail className="w-3 h-3 text-orange-400" />
+                edgar.mora.d@gmail.com
+              </a>
+              <span>•</span>
+              <span className="text-slate-300 font-medium">@edgar_rllr</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
