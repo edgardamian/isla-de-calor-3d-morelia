@@ -112,7 +112,7 @@ export default function GlassPanel({
               <div>
                 <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-500/15 border border-orange-500/30 text-orange-400 text-[10px] font-semibold uppercase tracking-wider mb-0.5">
                   <Satellite className="w-3 h-3" />
-                  Landsat • LST Calibrado
+                  Landsat • Temperatura superficial
                 </div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight">
                   Isla de Calor Urbana
@@ -179,26 +179,27 @@ export default function GlassPanel({
                 <div className="grid grid-cols-2 gap-1.5 pt-0.5">
                   <button
                     onClick={() => onChangeMDETextureMode('thermal')}
-                    className={`py-1.5 px-2 rounded-xl text-[11px] font-medium transition-all flex items-center justify-center gap-1.5 ${
+                    className={`py-1.5 px-2 rounded-xl text-[10.5px] font-medium transition-all flex items-center justify-center gap-1.5 ${
                       mdeTextureMode === 'thermal'
                         ? 'bg-gradient-to-r from-orange-500/30 to-red-500/30 border border-orange-500/50 text-white font-semibold shadow-sm'
                         : 'glass-button text-slate-400 hover:text-slate-200'
                     }`}
+                    title="Capa de temperatura superficial LST"
                   >
-                    <Flame className={`w-3.5 h-3.5 ${mdeTextureMode === 'thermal' ? 'text-orange-400' : 'text-slate-400'}`} />
-                    <span>Térmica LST</span>
+                    <Flame className={`w-3.5 h-3.5 shrink-0 ${mdeTextureMode === 'thermal' ? 'text-orange-400' : 'text-slate-400'}`} />
+                    <span className="truncate">Temperatura superficial</span>
                   </button>
 
                   <button
                     onClick={() => onChangeMDETextureMode('topography')}
-                    className={`py-1.5 px-2 rounded-xl text-[11px] font-medium transition-all flex items-center justify-center gap-1.5 ${
+                    className={`py-1.5 px-2 rounded-xl text-[10.5px] font-medium transition-all flex items-center justify-center gap-1.5 ${
                       mdeTextureMode === 'topography'
                         ? 'bg-blue-600/30 border border-blue-400 text-white font-semibold shadow-sm'
                         : 'glass-button text-slate-400 hover:text-slate-200'
                     }`}
                   >
-                    <Mountain className={`w-3.5 h-3.5 ${mdeTextureMode === 'topography' ? 'text-blue-400' : 'text-slate-400'}`} />
-                    <span>Relieve Base</span>
+                    <Mountain className={`w-3.5 h-3.5 shrink-0 ${mdeTextureMode === 'topography' ? 'text-blue-400' : 'text-slate-400'}`} />
+                    <span className="truncate">Relieve Base</span>
                   </button>
                 </div>
               )}
@@ -227,15 +228,15 @@ export default function GlassPanel({
                 <div className="grid grid-cols-2 gap-1.5 pt-0.5">
                   <button
                     onClick={() => onChangeBuildingTextureMode('thermal')}
-                    className={`py-1.5 px-2 rounded-xl text-[11px] font-medium transition-all flex items-center justify-center gap-1.5 ${
+                    className={`py-1.5 px-2 rounded-xl text-[10.5px] font-medium transition-all flex items-center justify-center gap-1.5 ${
                       buildingTextureMode === 'thermal'
                         ? 'bg-gradient-to-r from-orange-500/30 to-red-500/30 border border-orange-500/50 text-white font-semibold shadow-sm'
                         : 'glass-button text-slate-400 hover:text-slate-200'
                     }`}
-                    title="Textura térmica continua proyectada"
+                    title="Textura de temperatura superficial continua"
                   >
-                    <Flame className={`w-3.5 h-3.5 ${buildingTextureMode === 'thermal' ? 'text-orange-400' : 'text-slate-400'}`} />
-                    <span>Térmico</span>
+                    <Flame className={`w-3.5 h-3.5 shrink-0 ${buildingTextureMode === 'thermal' ? 'text-orange-400' : 'text-slate-400'}`} />
+                    <span className="truncate">Temperatura superficial</span>
                   </button>
 
                   <button

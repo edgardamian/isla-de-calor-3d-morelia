@@ -154,9 +154,9 @@ export default function ViewControlsHUD({
             <div className="p-3.5 rounded-2xl bg-gradient-to-br from-orange-950/40 to-slate-900/60 border border-orange-500/30 space-y-2">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-orange-500 text-white uppercase tracking-wider">
-                  Identificador Térmico LST
+                  Temperatura Superficial
                 </span>
-                <span className="text-[10px] text-orange-300 font-mono">¿Cómo usarlo?</span>
+                <span className="text-[10px] text-orange-300 font-mono">¿Cómo consultarla?</span>
               </div>
               <ol className="text-xs text-slate-300 space-y-1.5 list-decimal list-inside leading-relaxed">
                 <li>

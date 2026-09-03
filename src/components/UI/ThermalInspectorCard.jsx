@@ -48,8 +48,8 @@ export default function ThermalInspectorCard({ probeData, onClose }) {
                 <span className="text-xs font-bold text-white tracking-wide">
                   Identificador Térmico
                 </span>
-                <span className="text-[9px] font-mono text-cyan-400 bg-cyan-500/10 px-1 py-0.2 rounded border border-cyan-500/20">
-                  LST
+                <span className="text-[9px] font-mono text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">
+                  Temperatura superficial
                 </span>
               </div>
               <p className="text-[9px] text-slate-400">

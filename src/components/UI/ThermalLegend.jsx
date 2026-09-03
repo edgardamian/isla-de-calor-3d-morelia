@@ -28,7 +28,7 @@ export default function ThermalLegend({ modelStats }) {
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-xs font-bold text-white tracking-wide">
-                Escala Térmica LST
+                Temperatura Superficial
               </span>
               <span className="text-[10px] font-mono text-cyan-400">
                 19.0°C – 45.0°C
@@ -82,7 +82,7 @@ export default function ThermalLegend({ modelStats }) {
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                   <TrendingUp className="w-3.5 h-3.5 text-red-400" />
-                  Métricas Térmicas LST
+                  Métricas de Temperatura Superficial
                 </span>
                 <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
                   19.0°C – 45.0°C

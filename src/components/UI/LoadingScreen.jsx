@@ -116,7 +116,7 @@ export default function LoadingScreen({ isLoaded = false }) {
             <HeatPersonSilhouette className="w-4 h-4 shrink-0" animated={false} showSweat={false} />
             <div className="text-[10px] leading-tight">
               <p className="font-semibold text-slate-200">Termografía</p>
-              <p className="text-slate-500">LST Superficie</p>
+              <p className="text-slate-500">Temperatura superficial</p>
             </div>
           </div>
 
