@@ -40,7 +40,7 @@ export default function HeatIslandConceptModal({ isOpen, onClose }) {
             <span>Definición</span>
           </div>
           <p className="text-justify font-normal text-slate-200 leading-relaxed text-[12px]">
-            El efecto conocido como <strong className="text-white font-semibold">isla de calor urbana (ICU)</strong> produce mayores temperaturas del aire y las superficies en el centro de las ciudades comparado con sus áreas suburbanas, rurales y naturales circundantes.
+            El efecto conocido como <strong className="text-white font-semibold">isla de calor urbana (ICU)</strong> produce mayores temperaturas del aire y las superficies en el centro y en general en las zonas urbanizadas comparado con sus áreas suburbanas, rurales y naturales circundantes.
           </p>
           <p className="text-justify font-normal text-slate-200 leading-relaxed text-[12px]">
             Este fenómeno se relaciona principalmente con la <strong className="text-orange-300">alta densidad de urbanización</strong>, la <strong className="text-orange-300">alta absortancia de los materiales</strong> presentes en la ciudad, la <strong className="text-orange-300">escasez de espacios verdes</strong>, las características morfológicas de los <strong className="text-orange-300">cañones urbanos</strong>, y el <strong className="text-orange-300">calor antropogénico</strong> liberado.
