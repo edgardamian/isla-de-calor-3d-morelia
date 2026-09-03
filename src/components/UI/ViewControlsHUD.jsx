@@ -12,9 +12,8 @@ import {
   Thermometer,
   MapPin,
   Flame,
+  Mail,
 } from 'lucide-react';
-
-import HeatIslandConceptModal from './HeatIslandConceptModal';
 
 export default function ViewControlsHUD({
   onResetView,
@@ -29,7 +28,6 @@ export default function ViewControlsHUD({
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const [showConcept, setShowConcept] = useState(false);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -112,17 +110,6 @@ export default function ViewControlsHUD({
           ) : (
             <Maximize2 className="w-4 h-4" />
           )}
-        </button>
-
-        {/* Concept Button: ¿Qué es una Isla de Calor? */}
-        <button
-          onClick={() => setShowConcept(true)}
-          className="px-3 py-2 rounded-2xl flex items-center gap-1.5 text-xs font-semibold shadow-xl border transition-all bg-gradient-to-r from-orange-600/30 via-red-600/30 to-orange-600/30 hover:from-orange-600/45 hover:to-red-600/45 border-orange-500/50 text-orange-200 hover:text-white backdrop-blur-md"
-          title="¿Qué es una Isla de Calor Urbana? (Definición oficial y factores)"
-        >
-          <Flame className="w-3.5 h-3.5 text-orange-400 animate-pulse" />
-          <span className="hidden lg:inline">¿Qué es una Isla de Calor?</span>
-          <span className="lg:hidden">¿Qué es ICU?</span>
         </button>
 
         {/* Help & Navigation Modal Trigger */}
@@ -218,6 +205,24 @@ export default function ViewControlsHUD({
               <strong>Nota de restricción:</strong> El visor cuenta con un límite de ángulo polar para evitar pasar por debajo del relieve geográfico del modelo.
             </div>
 
+            {/* Personal Author Credits */}
+            <div className="pt-2 border-t border-white/10 text-center space-y-1">
+              <p className="text-xs font-semibold text-slate-200">
+                Edgar Mora D.
+              </p>
+              <div className="flex items-center justify-center gap-3 text-[11px] text-slate-400">
+                <a
+                  href="mailto:edgar.mora.d@gmail.com"
+                  className="hover:text-orange-400 transition-colors underline underline-offset-2 flex items-center gap-1"
+                >
+                  <Mail className="w-3 h-3 text-orange-400" />
+                  edgar.mora.d@gmail.com
+                </a>
+                <span>•</span>
+                <span className="text-slate-300 font-medium">@edgar_rllr</span>
+              </div>
+            </div>
+
             <button
               onClick={() => setShowHelp(false)}
               className="w-full py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 font-semibold text-xs text-white transition-colors"
@@ -227,12 +232,6 @@ export default function ViewControlsHUD({
           </div>
         </div>
       )}
-
-      {/* Heat Island Concept Scientific Modal */}
-      <HeatIslandConceptModal
-        isOpen={showConcept}
-        onClose={() => setShowConcept(false)}
-      />
     </>
   );
 }

@@ -37,7 +37,7 @@ export default function HeatIslandConceptModal({ isOpen, onClose }) {
         <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-950/30 via-slate-900 to-slate-950 border border-orange-500/30 text-xs leading-relaxed text-slate-200 space-y-2 shadow-inner">
           <div className="flex items-center gap-1.5 text-orange-400 text-[11px] font-semibold">
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Definición Oficial</span>
+            <span>Definición</span>
           </div>
           <p className="text-justify font-normal text-slate-200 leading-relaxed text-[12px]">
             El efecto conocido como <strong className="text-white font-semibold">isla de calor urbana (ICU)</strong> produce mayores temperaturas del aire en el centro de las ciudades comparado con sus áreas suburbanas, rurales y naturales circundantes.

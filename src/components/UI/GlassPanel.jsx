@@ -25,6 +25,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import HeatPersonSilhouette from './HeatPersonSilhouette';
+import HeatIslandConceptModal from './HeatIslandConceptModal';
 
 function formatSolarTime(decimalHours) {
   const totalMinutes = Math.round(decimalHours * 60);
@@ -70,6 +71,7 @@ export default function GlassPanel({
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isSolarOpen, setIsSolarOpen] = useState(false); // Collapsed by default
+  const [showConceptModal, setShowConceptModal] = useState(false);
 
   return (
     <aside
@@ -130,6 +132,15 @@ export default function GlassPanel({
               <ChevronLeft className="w-5 h-5" />
             </button>
           </div>
+
+          {/* Button: ¿Qué es una Isla de Calor? */}
+          <button
+            onClick={() => setShowConceptModal(true)}
+            className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-orange-500/20 via-red-500/20 to-orange-500/20 hover:from-orange-500/30 hover:to-red-500/30 border border-orange-500/40 text-orange-200 hover:text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98] cursor-pointer"
+          >
+            <Flame className="w-4 h-4 text-orange-400 animate-pulse" />
+            <span>¿Qué es una Isla de Calor?</span>
+          </button>
 
           {/* ======================================================== */}
           {/* 1. HERRAMIENTA DE CONTROL DE TEXTURAS Y CAPAS 3D          */}
@@ -568,6 +579,12 @@ export default function GlassPanel({
 
         </div>
       )}
+
+      {/* Heat Island Concept Scientific Modal */}
+      <HeatIslandConceptModal
+        isOpen={showConceptModal}
+        onClose={() => setShowConceptModal(false)}
+      />
     </aside>
   );
 }
