@@ -15,6 +15,7 @@ import {
   Mail,
 } from 'lucide-react';
 import HeatIslandConceptModal from './HeatIslandConceptModal';
+import HeatPersonSilhouette from './HeatPersonSilhouette';
 
 export default function MobileUnsupportedNotice() {
   const [copied, setCopied] = useState(false);
@@ -65,8 +66,14 @@ export default function MobileUnsupportedNotice() {
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3.5 max-w-lg mx-auto w-full">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-orange-500/15 border border-orange-500/30 text-orange-400 shadow-lg shadow-orange-500/20">
-            <Flame className="w-5 h-5" />
+          <div className="relative">
+            <div className="w-10 h-10 rounded-2xl bg-slate-900/90 border border-orange-500/40 flex items-center justify-center shadow-lg shadow-orange-500/20 p-1">
+              <HeatPersonSilhouette className="w-8 h-8" animated={false} />
+            </div>
+            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
+            </span>
           </div>
           <div>
             <h1 className="text-sm font-bold text-white tracking-tight leading-tight">
@@ -86,8 +93,15 @@ export default function MobileUnsupportedNotice() {
 
       {/* Main Notice Card */}
       <main className="relative z-10 my-3 max-w-lg mx-auto w-full space-y-3.5 text-center">
+        {/* Minimalist 🥵 Face & Morelia Aqueduct Identity Icon */}
+        <div className="relative flex items-center justify-center pt-1 pb-0.5">
+          <div className="w-24 h-24 rounded-3xl bg-slate-900/90 border border-orange-500/35 shadow-[0_0_35px_rgba(249,115,22,0.3)] flex items-center justify-center backdrop-blur-md p-2">
+            <HeatPersonSilhouette className="w-16 h-16" animated={true} showSweat={true} />
+          </div>
+        </div>
+
         {/* Title and explanation */}
-        <div className="space-y-1.5 pt-1">
+        <div className="space-y-1.5 pt-0.5">
           <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-300 text-[11px] font-semibold mb-1">
             <Sparkles className="w-3 h-3 text-sky-400" />
             Experiencia de Alta Resolución
