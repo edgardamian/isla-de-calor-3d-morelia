@@ -10,6 +10,7 @@ export default function CameraController({
   autoRotate = false,
   onControlsReady,
   onCameraMoveStart,
+  focusTarget = null,
 }) {
   const { camera } = useThree();
   const controlsRef = useRef(null);
@@ -26,6 +27,22 @@ export default function CameraController({
     isTransitioningRef.current = true;
   }, [activePreset, resetTrigger]);
 
+  // Respond to focus target (points of interest or heat island areas)
+  useEffect(() => {
+    if (focusTarget && focusTarget.target) {
+      const [tx, ty, tz] = focusTarget.target;
+      targetLookAtRef.current.set(tx, ty, tz);
+
+      if (focusTarget.position) {
+        targetCamPosRef.current.set(...focusTarget.position);
+      } else {
+        // High-zoom elevated isometric view for close-up inspection
+        targetCamPosRef.current.set(tx + 2.6, ty + 1.9, tz + 2.9);
+      }
+      isTransitioningRef.current = true;
+    }
+  }, [focusTarget]);
+
   useEffect(() => {
     if (controlsRef.current && onControlsReady) {
       onControlsReady(controlsRef.current);
@@ -37,7 +54,7 @@ export default function CameraController({
     if (!controlsRef.current) return;
 
     if (isTransitioningRef.current) {
-      const lerpSpeed = Math.min(1, delta * 4.5);
+      const lerpSpeed = Math.min(1, delta * 5.0);
       
       camera.position.lerp(targetCamPosRef.current, lerpSpeed);
       controlsRef.current.target.lerp(targetLookAtRef.current, lerpSpeed);
@@ -46,7 +63,7 @@ export default function CameraController({
       const distPos = camera.position.distanceTo(targetCamPosRef.current);
       const distTarget = controlsRef.current.target.distanceTo(targetLookAtRef.current);
 
-      if (distPos < 0.1 && distTarget < 0.1) {
+      if (distPos < 0.05 && distTarget < 0.05) {
         camera.position.copy(targetCamPosRef.current);
         controlsRef.current.target.copy(targetLookAtRef.current);
         controlsRef.current.update();
@@ -65,13 +82,13 @@ export default function CameraController({
       enableDamping={true}
       dampingFactor={0.09}
       screenSpacePanning={true}
-      zoomSpeed={1.5}
-      panSpeed={1.6}
+      zoomSpeed={1.8}
+      panSpeed={1.8}
       rotateSpeed={1.0}
       // Required constraint: maxPolarAngle strictly <= Math.PI / 2.1
       maxPolarAngle={Math.PI / 2.1}
       minPolarAngle={0.05}
-      minDistance={1.0}
+      minDistance={0.08}
       maxDistance={250}
       autoRotate={autoRotate}
       autoRotateSpeed={0.7}

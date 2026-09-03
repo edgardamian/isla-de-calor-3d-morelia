@@ -2,6 +2,8 @@ import React, { useMemo, useEffect, useRef, useCallback } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { sampleThermalIntersection } from '../../utils/thermalSampler';
+import ReferencePointsLayer from './ReferencePointsLayer';
+import AffectedAreasLayer from './AffectedAreasLayer';
 
 const MODEL_PATH = `${import.meta.env.BASE_URL}ISLA_DE_CALOR_3D_V5.glb`;
 const DRACO_PATH = `${import.meta.env.BASE_URL}draco/`;
@@ -14,8 +16,14 @@ export default function UrbanModel({
   showBuildings = true,
   mdeTextureMode = 'thermal', // 'thermal' | 'topography'
   buildingTextureMode = 'thermal', // 'thermal' | 'architectural'
+  showReferencePoints = true,
+  showAffectedAreas = true,
   onLoaded,
   onInspectPoint,
+  onSelectPoint,
+  onSelectArea,
+  activePoint = null,
+  activeArea = null,
 }) {
   const gltf = useGLTF(MODEL_PATH, DRACO_PATH);
 
@@ -73,6 +81,8 @@ export default function UrbanModel({
           if (pos) triangleCount += pos.count / 3;
 
           const geom = child.geometry;
+          if (!geom.boundingBox) geom.computeBoundingBox();
+          if (!geom.boundingSphere) geom.computeBoundingSphere();
 
           // Align UV attributes if needed
           if (geom.attributes.uv1 && !geom.attributes.uv2) {
@@ -415,6 +425,43 @@ export default function UrbanModel({
         ]}
       >
         <primitive object={processedScene} />
+
+        {/* 1. Capa de Puntos de Referencia Urbanos */}
+        <ReferencePointsLayer
+          visible={showReferencePoints}
+          mdeMeshes={meshRefs?.mde}
+          onSelectPoint={(pt) => {
+            if (onSelectPoint) {
+              const worldPos = [
+                (pt.x - center.x) * scaleFactor,
+                (pt.y - center.y) * scaleFactor * elevationScale,
+                (pt.z - center.z) * scaleFactor,
+              ];
+              onSelectPoint({ ...pt, worldPos });
+            }
+          }}
+          activePoint={activePoint}
+          hasSelection={!!activePoint || !!activeArea}
+        />
+
+        {/* 2. Capa de Áreas Críticas de Isla de Calor */}
+        <AffectedAreasLayer
+          visible={showAffectedAreas}
+          mdeMeshes={meshRefs?.mde}
+          onSelectArea={(area) => {
+            if (onSelectArea) {
+              const [cx, cy, cz] = area.centroid;
+              const worldPos = [
+                (cx - center.x) * scaleFactor,
+                (cy - center.y) * scaleFactor * elevationScale,
+                (cz - center.z) * scaleFactor,
+              ];
+              onSelectArea({ ...area, worldPos });
+            }
+          }}
+          activeArea={activeArea}
+          hasSelection={!!activePoint || !!activeArea}
+        />
       </group>
     </group>
   );

@@ -1,0 +1,26 @@
+{
+"type": "FeatureCollection",
+"name": "puntos_referencia",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "fid": 41, "nombre": "Catedral de Morelia" }, "geometry": { "type": "Point", "coordinates": [ -101.192354134825024, 19.702727029824178 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Bosque Cuautémoc" }, "geometry": { "type": "Point", "coordinates": [ -101.180137679519163, 19.698685624193654 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Monumento a LZC" }, "geometry": { "type": "Point", "coordinates": [ -101.207183112551263, 19.701871342589875 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Crucero salida a Quiroga" }, "geometry": { "type": "Point", "coordinates": [ -101.243299070970721, 19.700180951689909 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Villas del Pedregal" }, "geometry": { "type": "Point", "coordinates": [ -101.3050205905312, 19.675710961890612 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Crucero Salida a Pátzcuaro" }, "geometry": { "type": "Point", "coordinates": [ -101.219576910657608, 19.676798066345615 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Plaza las Américas" }, "geometry": { "type": "Point", "coordinates": [ -101.158162914587493, 19.688933415625687 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Crucero salida Mil Cumbres" }, "geometry": { "type": "Point", "coordinates": [ -101.14919686859227, 19.694684353098555 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Crucero Salida a Charo" }, "geometry": { "type": "Point", "coordinates": [ -101.165802514489997, 19.710214273513273 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Crucero Salida Salamanca" }, "geometry": { "type": "Point", "coordinates": [ -101.188190032457484, 19.721449971281988 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Zoológico" }, "geometry": { "type": "Point", "coordinates": [ -101.193831388131386, 19.685100264882358 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Universidad Michoacana" }, "geometry": { "type": "Point", "coordinates": [ -101.203264246277314, 19.688859146182281 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Estadio Morelos" }, "geometry": { "type": "Point", "coordinates": [ -101.23344723575434, 19.71878603897531 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Terminal de Autobuses" }, "geometry": { "type": "Point", "coordinates": [ -101.226090064701879, 19.719605704645232 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "El Pípila" }, "geometry": { "type": "Point", "coordinates": [ -101.18859784303379, 19.710579911411081 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Ciudad Industrial" }, "geometry": { "type": "Point", "coordinates": [ -101.144760395535997, 19.727420046720354 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Altozano" }, "geometry": { "type": "Point", "coordinates": [ -101.162647877820902, 19.67394752171046 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Tenencia Morelos" }, "geometry": { "type": "Point", "coordinates": [ -101.236495461061992, 19.646804297859084 ] } },
+{ "type": "Feature", "properties": { "fid": null, "nombre": "Ciudad Salud" }, "geometry": { "type": "Point", "coordinates": [ -101.104028883780927, 19.732598600060562 ] } }
+]
+}

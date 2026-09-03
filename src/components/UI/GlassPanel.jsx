@@ -22,6 +22,7 @@ import {
   Clock,
   Play,
   Pause,
+  AlertTriangle,
 } from 'lucide-react';
 import HeatPersonSilhouette from './HeatPersonSilhouette';
 
@@ -72,7 +73,7 @@ export default function GlassPanel({
 
   return (
     <aside
-      className={`fixed top-4 left-4 z-20 transition-all duration-500 ease-in-out pointer-events-auto ${
+      className={`fixed top-4 left-4 z-30 transition-all duration-500 ease-in-out pointer-events-auto ${
         isCollapsed
           ? 'w-14 h-14'
           : 'w-[calc(100vw-2rem)] sm:w-96 max-h-[calc(100vh-2rem)]'

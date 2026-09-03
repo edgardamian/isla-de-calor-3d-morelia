@@ -10,6 +10,8 @@ import {
   X,
   Compass,
   Thermometer,
+  MapPin,
+  Flame,
 } from 'lucide-react';
 
 export default function ViewControlsHUD({
@@ -18,6 +20,10 @@ export default function ViewControlsHUD({
   onToggleProbe,
   hasProbeSelection = false,
   onClearProbe,
+  showReferencePoints = false,
+  onToggleShowReferencePoints,
+  showAffectedAreas = false,
+  onToggleShowAffectedAreas,
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -47,7 +53,41 @@ export default function ViewControlsHUD({
       )}
 
       {/* Top Right Floating Toolbar */}
-      <div className="fixed top-4 right-4 z-20 pointer-events-auto flex items-center gap-2">
+      <div className="fixed top-4 right-4 z-30 pointer-events-auto flex items-center gap-2">
+        {/* Quick Toggle: Reference Points */}
+        {onToggleShowReferencePoints && (
+          <button
+            onClick={onToggleShowReferencePoints}
+            className={`px-3.5 py-2 rounded-2xl flex items-center gap-2 text-xs font-semibold shadow-xl border transition-all ${
+              showReferencePoints
+                ? 'bg-sky-600/90 hover:bg-sky-500 border-2 border-sky-300 text-white shadow-sky-500/35 backdrop-blur-md'
+                : 'bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white border border-white/20 backdrop-blur-md'
+            }`}
+            title={showReferencePoints ? 'Apagar Puntos de Referencia' : 'Encender Puntos de Referencia'}
+          >
+            <MapPin className={`w-3.5 h-3.5 ${showReferencePoints ? 'text-white' : 'text-sky-400'}`} />
+            <span className="hidden sm:inline">Puntos de Referencia</span>
+            <span className={`w-2 h-2 rounded-full ${showReferencePoints ? 'bg-white animate-pulse' : 'bg-slate-500'}`} />
+          </button>
+        )}
+
+        {/* Quick Toggle: Representative Affected Areas */}
+        {onToggleShowAffectedAreas && (
+          <button
+            onClick={onToggleShowAffectedAreas}
+            className={`px-3.5 py-2 rounded-2xl flex items-center gap-2 text-xs font-semibold shadow-xl border transition-all ${
+              showAffectedAreas
+                ? 'bg-red-600/90 hover:bg-red-500 border-2 border-red-300 text-white shadow-red-500/35 backdrop-blur-md'
+                : 'bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white border border-white/20 backdrop-blur-md'
+            }`}
+            title={showAffectedAreas ? 'Apagar Áreas afectadas representativas' : 'Encender Áreas afectadas representativas'}
+          >
+            <Flame className={`w-3.5 h-3.5 ${showAffectedAreas ? 'text-white animate-pulse' : 'text-red-400'}`} />
+            <span className="hidden sm:inline">Áreas afectadas representativas</span>
+            <span className={`w-2 h-2 rounded-full ${showAffectedAreas ? 'bg-white animate-pulse' : 'bg-slate-500'}`} />
+          </button>
+        )}
+
         {/* Reset View Quick Button */}
         <button
           onClick={onResetView}

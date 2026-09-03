@@ -3,6 +3,8 @@ import SceneCanvas from './components/Viewer3D/SceneCanvas';
 import GlassPanel from './components/UI/GlassPanel';
 import ThermalLegend from './components/UI/ThermalLegend';
 import ThermalInspectorCard from './components/UI/ThermalInspectorCard';
+import AffectedAreaCard from './components/UI/AffectedAreaCard';
+import ReferencePointCard from './components/UI/ReferencePointCard';
 import ViewControlsHUD from './components/UI/ViewControlsHUD';
 import LoadingScreen from './components/UI/LoadingScreen';
 import ErrorBoundary from './components/UI/ErrorBoundary';
@@ -23,6 +25,15 @@ export default function App() {
   const [showBuildings, setShowBuildings] = useState(true);
   const [buildingTextureMode, setBuildingTextureMode] = useState('thermal'); // 'thermal' | 'architectural'
   
+  // GeoJSON Layers Visibility (Both OFF by default as requested)
+  const [showReferencePoints, setShowReferencePoints] = useState(false);
+  const [showAffectedAreas, setShowAffectedAreas] = useState(false);
+  
+  // Selected Features & Camera Navigation
+  const [activePoint, setActivePoint] = useState(null);
+  const [activeArea, setActiveArea] = useState(null);
+  const [focusTarget, setFocusTarget] = useState(null);
+
   const [lightingPreset, setLightingPreset] = useState('sunrise');
   const [sunTime, setSunTime] = useState(7.0); // 07:00 AM (Amanecer)
   const [isPlayingShadows, setIsPlayingShadows] = useState(false);
@@ -62,10 +73,14 @@ export default function App() {
   const handleResetView = useCallback(() => {
     setActivePreset('isometric');
     setResetTrigger((prev) => prev + 1);
+    setFocusTarget(null);
+    setActivePoint(null);
+    setActiveArea(null);
   }, []);
 
   const handleSelectPreset = useCallback((presetId) => {
     setActivePreset(presetId);
+    setFocusTarget(null);
   }, []);
 
   const handleToggleAutoRotate = useCallback(() => {
@@ -98,6 +113,50 @@ export default function App() {
 
   const handleChangeBuildingTextureMode = useCallback((mode) => {
     setBuildingTextureMode(mode);
+  }, []);
+
+  // Layer Toggles & Interactions
+  const handleToggleShowReferencePoints = useCallback(() => {
+    setShowReferencePoints((prev) => !prev);
+  }, []);
+
+  const handleToggleShowAffectedAreas = useCallback(() => {
+    setShowAffectedAreas((prev) => !prev);
+  }, []);
+
+  const handleSelectPoint = useCallback((pt) => {
+    setActivePoint(pt);
+    setActiveArea(null);
+    setProbeData(null);
+    // User stays wherever they currently are; camera does NOT zoom out or move
+  }, []);
+
+  const handleSelectArea = useCallback((area) => {
+    setActiveArea(area);
+    setActivePoint(null);
+    setProbeData(null);
+    // User stays wherever they currently are; camera does NOT zoom out or move
+  }, []);
+
+  const handleCloseArea = useCallback(() => {
+    setActiveArea(null);
+  }, []);
+
+  const handleClosePoint = useCallback(() => {
+    setActivePoint(null);
+  }, []);
+
+  // Triggered exclusively when user clicks 'Centrar Vista' inside the cards
+  const handleFocusPoint = useCallback((pt) => {
+    if (pt?.worldPos) {
+      setFocusTarget({ target: pt.worldPos });
+    }
+  }, []);
+
+  const handleFocusArea = useCallback((area) => {
+    if (area?.worldPos) {
+      setFocusTarget({ target: area.worldPos });
+    }
   }, []);
 
   const handleSelectLighting = useCallback((presetId) => {
@@ -135,6 +194,7 @@ export default function App() {
 
   const handleInspectPoint = useCallback((data) => {
     setProbeData(data);
+    setActiveArea(null);
   }, []);
 
   const handleCloseProbe = useCallback(() => {
@@ -142,6 +202,7 @@ export default function App() {
   }, []);
 
   const handleCameraMove = useCallback(() => {
+    setFocusTarget(null);
     setProbeData((prevData) => {
       if (prevData !== null) return null;
       return prevData;
@@ -164,6 +225,8 @@ export default function App() {
           showBuildings={showBuildings}
           mdeTextureMode={mdeTextureMode}
           buildingTextureMode={buildingTextureMode}
+          showReferencePoints={showReferencePoints}
+          showAffectedAreas={showAffectedAreas}
           lightingPreset={lightingPreset}
           sunTime={sunTime}
           enableShadows={enableShadows}
@@ -172,6 +235,11 @@ export default function App() {
           onInspectPoint={handleInspectPoint}
           onCloseProbe={handleCloseProbe}
           onCameraMove={handleCameraMove}
+          focusTarget={focusTarget}
+          onSelectPoint={handleSelectPoint}
+          onSelectArea={handleSelectArea}
+          activePoint={activePoint}
+          activeArea={activeArea}
         />
       </ErrorBoundary>
 
@@ -179,7 +247,7 @@ export default function App() {
       <LoadingScreen isLoaded={isModelLoaded} />
 
       {/* Superimposed UI Overlay Layer */}
-      <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden">
         
         {/* Left Side Glassmorphism Panel */}
         <GlassPanel
@@ -216,7 +284,7 @@ export default function App() {
         />
 
         {/* Bottom Right Land Surface Temperature Legend & Expandable Metadata */}
-        {!probeData && <ThermalLegend modelStats={modelStats} />}
+        {!probeData && !activeArea && !activePoint && <ThermalLegend modelStats={modelStats} />}
 
         {/* Compact & Well-proportioned Thermal Identifier Card */}
         {probeData && (
@@ -226,10 +294,32 @@ export default function App() {
           />
         )}
 
+        {/* Reference Point Information Card */}
+        {activePoint && (
+          <ReferencePointCard
+            pointData={activePoint}
+            onClose={handleClosePoint}
+            onFocusPoint={handleFocusPoint}
+          />
+        )}
+
+        {/* Affected Heat Island Area Information Card */}
+        {activeArea && (
+          <AffectedAreaCard
+            areaData={activeArea}
+            onClose={handleCloseArea}
+            onFocusArea={handleFocusArea}
+          />
+        )}
+
         {/* Top Right HUD Action Controls */}
         <ViewControlsHUD
           onResetView={handleResetView}
-          hasProbeSelection={!!probeData}
+          hasProbeSelection={!!probeData || !!activeArea || !!activePoint}
+          showReferencePoints={showReferencePoints}
+          onToggleShowReferencePoints={handleToggleShowReferencePoints}
+          showAffectedAreas={showAffectedAreas}
+          onToggleShowAffectedAreas={handleToggleShowAffectedAreas}
         />
         
       </div>

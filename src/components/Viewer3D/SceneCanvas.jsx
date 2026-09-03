@@ -65,6 +65,8 @@ export default function SceneCanvas({
   showBuildings = true,
   mdeTextureMode = 'thermal',
   buildingTextureMode = 'thermal',
+  showReferencePoints = true,
+  showAffectedAreas = true,
   lightingPreset,
   sunTime = 7.0,
   enableShadows = true,
@@ -74,6 +76,11 @@ export default function SceneCanvas({
   onInspectPoint,
   onCloseProbe,
   onCameraMove,
+  focusTarget,
+  onSelectPoint,
+  onSelectArea,
+  activePoint,
+  activeArea,
 }) {
   return (
     <div
@@ -86,7 +93,7 @@ export default function SceneCanvas({
         camera={{
           position: [42, 36, 42],
           fov: 45,
-          near: 0.1,
+          near: 0.05,
           far: 1000,
         }}
         gl={{
@@ -121,6 +128,7 @@ export default function SceneCanvas({
           autoRotate={autoRotate}
           onControlsReady={onControlsReady}
           onCameraMoveStart={onCameraMove || onCloseProbe}
+          focusTarget={focusTarget}
         />
 
         <RightClickThermalProbe onInspectPoint={onInspectPoint} />
@@ -134,7 +142,13 @@ export default function SceneCanvas({
             showBuildings={showBuildings}
             mdeTextureMode={mdeTextureMode}
             buildingTextureMode={buildingTextureMode}
+            showReferencePoints={showReferencePoints}
+            showAffectedAreas={showAffectedAreas}
             onLoaded={onModelLoaded}
+            onSelectPoint={onSelectPoint}
+            onSelectArea={onSelectArea}
+            activePoint={activePoint}
+            activeArea={activeArea}
           />
 
           {probeData && (
