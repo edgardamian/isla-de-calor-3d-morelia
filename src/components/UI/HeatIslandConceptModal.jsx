@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flame, X, BookOpen, TreePine, Building2, Sun, Factory } from 'lucide-react';
+import { Flame, X, BookOpen, TreePine, Building2, Sun, Factory, Mail } from 'lucide-react';
 
 export default function HeatIslandConceptModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -92,8 +92,26 @@ export default function HeatIslandConceptModal({ isOpen, onClose }) {
           </div>
         </div>
 
+        {/* Author Personal Credits */}
+        <div className="pt-2 border-t border-white/10 text-center space-y-1">
+          <p className="text-xs font-semibold text-slate-200">
+            Edgar Mora D.
+          </p>
+          <div className="flex items-center justify-center gap-3 text-[11px] text-slate-400">
+            <a
+              href="mailto:edgar.mora.d@gmail.com"
+              className="hover:text-orange-400 transition-colors underline underline-offset-2 flex items-center gap-1"
+            >
+              <Mail className="w-3 h-3 text-orange-400" />
+              edgar.mora.d@gmail.com
+            </a>
+            <span>•</span>
+            <span className="text-slate-300 font-medium">@edgar_rllr</span>
+          </div>
+        </div>
+
         {/* Close action */}
-        <div className="pt-2">
+        <div className="pt-1">
           <button
             onClick={onClose}
             className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-white/10 transition-colors"
