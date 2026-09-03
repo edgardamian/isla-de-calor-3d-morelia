@@ -129,7 +129,7 @@ export default function ThermalLegend({ modelStats }) {
               <div className="flex items-center justify-between text-[11px] font-semibold text-cyan-300 border-b border-white/5 pb-1.5">
                 <span className="flex items-center gap-1.5">
                   <Satellite className="w-3.5 h-3.5 text-cyan-400" />
-                  Captura Satelital Landsat 8/9
+                  Temperatura Superficial del Satélite Landsat 8
                 </span>
                 <span className="text-emerald-400 font-mono text-[10px]">Sensor TIRS (B10)</span>
               </div>

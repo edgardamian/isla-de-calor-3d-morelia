@@ -110,10 +110,6 @@ export default function GlassPanel({
               </div>
 
               <div>
-                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-500/15 border border-orange-500/30 text-orange-400 text-[10px] font-semibold uppercase tracking-wider mb-0.5">
-                  <Satellite className="w-3 h-3" />
-                  Temperatura Superficial del Satélite Landsat 8
-                </div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight">
                   Isla de Calor Urbana
                 </h1>
